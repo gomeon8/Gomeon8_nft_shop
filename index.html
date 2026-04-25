@@ -3,115 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>NFT Подарки | Реальные изображения</title>
+    <title>NFT Подарки | Каталог</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #000000;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            padding: 20px 16px 40px 16px;
-            color: white;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px 12px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .gift-card {
-            background: transparent;
-            text-align: center;
-            transition: transform 0.1s ease;
-        }
-
-        .gift-card:active {
-            transform: scale(0.98);
-        }
-
-        .image-wrapper {
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 8px;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 12px rgba(255,255,255,0.05);
-            position: relative;
-            min-height: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .gift-image {
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #000000; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 20px 16px 40px 16px; color: white; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 12px; max-width: 900px; margin: 0 auto; }
+        .gift-card { text-align: center; }
+        .image-wrapper { background: #ffffff; border-radius: 24px; padding: 8px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(255,255,255,0.05); min-height: 200px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .gift-name { font-weight: 600; font-size: 15px; color: white; margin-bottom: 6px; word-break: break-word; }
+        .gift-price { font-size: 16px; font-weight: 700; color: white; background: rgba(255,255,255,0.08); display: inline-block; padding: 4px 12px; border-radius: 40px; }
+        .gift-price::before { content: "₽ "; }
+        .gift-link { text-decoration: none; display: block; cursor: pointer; }
+        .footer-note { text-align: center; margin-top: 40px; font-size: 13px; color: #aaa; border-top: 1px solid #222; padding-top: 24px; }
+        
+        /* Стили для встроенного Telegram-виджета */
+        .telegram-embed {
             width: 100%;
             aspect-ratio: 1 / 1;
-            object-fit: cover;
+            border: none;
             border-radius: 20px;
-            display: block;
+            background: #1a1a1a;
         }
-
-        .loader {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(255,255,255,0.2);
-            border-top: 3px solid white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .gift-name {
-            font-weight: 600;
-            font-size: 15px;
-            color: white;
-            margin-bottom: 6px;
-            word-break: break-word;
-        }
-
-        .gift-price {
-            font-size: 16px;
-            font-weight: 700;
-            color: white;
-            background: rgba(255,255,255,0.08);
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 40px;
-        }
-
-        .gift-price::before {
-            content: "₽ ";
-        }
-
-        .gift-link {
-            text-decoration: none;
-            display: block;
-            cursor: pointer;
-        }
-
-        .footer-note {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 13px;
-            color: #aaa;
-            border-top: 1px solid #222;
-            padding-top: 24px;
-        }
-
-        @media (max-width: 560px) {
-            .gift-name { font-size: 13px; }
-            .gift-price { font-size: 14px; padding: 3px 10px; }
+        
+        @media (max-width: 560px) { 
+            .gift-name { font-size: 13px; } 
+            .gift-price { font-size: 14px; padding: 3px 10px; } 
+            .image-wrapper { border-radius: 20px; padding: 6px; min-height: 150px; }
         }
     </style>
 </head>
@@ -119,18 +36,13 @@
 
 <div class="grid" id="nftGrid"></div>
 <div class="footer-note">
-    🔥 Нажми на подарок → откроется в Telegram<br>
-    🖼 Реальные изображения загружаются автоматически
+    🔥 Нажми на подарок → откроется в Telegram с полной анимацией<br>
+    🎬 Анимированные изображения подгружаются автоматически
 </div>
 
 <script>
     // ============================================================
-    // ТВОЙ ТОКЕН БОТА (УЖЕ ВСТАВЛЕН)
-    // ============================================================
-    const BOT_TOKEN = "8531011825:AAFyXrb38AUzis5DM460KMjfB0TGDh364nA";
-    
-    // ============================================================
-    // ЗДЕСЬ ТЫ МЕНЯЕШЬ ПОДАРКИ (ДОБАВЛЯЙ, МЕНЯЙ ЦЕНЫ, НАЗВАНИЯ)
+    // ЗДЕСЬ ТЫ МЕНЯЕШЬ ПОДАРКИ (ДОБАВЛЯЙ, МЕНЯЙ ЦЕНЫ)
     // ============================================================
     const gifts = [
         {
@@ -139,7 +51,7 @@
             price: 567,
             link: "https://t.me/nft/ViceCream-347944"
         }
-        // Пример добавления нового подарка (раскомментируй и заполни):
+        // Добавляй новые подарки сюда:
         // {
         //     id: 2,
         //     name: "Gold Star",
@@ -148,104 +60,38 @@
         // }
     ];
 
-    // ========== ФУНКЦИЯ ПОЛУЧЕНИЯ РЕАЛЬНОЙ КАРТИНКИ NFT ЧЕРЕЗ БОТА ==========
-    async function getRealNFTImageFromBot(nftLink) {
-        // Извлекаем ID подарка из ссылки t.me/nft/...
+    // Функция создания iframe с превью из Telegram
+    function createTelegramPreview(nftLink) {
+        // Извлекаем ID подарка
         const match = nftLink.match(/t\.me\/nft\/([a-zA-Z0-9\-]+)/);
         if (!match) return null;
         
         const nftId = match[1];
         
-        // Способ 1: Прямая ссылка на изображение через CDN Telegram
-        const cdnUrl = `https://cdn.telegram.org/nft/${nftId}.jpg`;
+        // Используем официальный Telegram Embed URL
+        // Этот виджет показывает ТО ЖЕ изображение, что и в чате Telegram
+        const embedUrl = `https://t.me/nft/${nftId}?embed=1&mode=tg`;
         
-        // Проверяем, существует ли изображение
-        const exists = await checkImageExists(cdnUrl);
-        if (exists) {
-            return cdnUrl;
-        }
+        const iframe = document.createElement('iframe');
+        iframe.src = embedUrl;
+        iframe.className = 'telegram-embed';
+        iframe.loading = 'lazy';
+        iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms allow-same-origin');
         
-        // Способ 2: Через API бота (пробуем получить file_id)
-        try {
-            // Используем метод getFile через бота
-            const apiUrl = `https://api.telegram.org/bot${BOT_TOKEN}/getFile?file_id=${nftId}`;
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-            
-            if (data.ok && data.result && data.result.file_path) {
-                const fileUrl = `https://api.telegram.org/file/bot${BOT_TOKEN}/${data.result.file_path}`;
-                return fileUrl;
-            }
-        } catch(e) {
-            console.log("API метод не сработал", e);
-        }
-        
-        // Способ 3: Через публичный API nft.telegram.org
-        const nftApiUrl = `https://nft.telegram.org/api/piece/${nftId}/image?size=large`;
-        const nftExists = await checkImageExists(nftApiUrl);
-        if (nftExists) {
-            return nftApiUrl;
-        }
-        
-        return null;
+        return iframe;
     }
-    
-    // Проверка существования изображения
-    function checkImageExists(url) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => resolve(true);
-            img.onerror = () => resolve(false);
-            img.src = url;
-            setTimeout(() => resolve(false), 3000);
-        });
-    }
-    
-    // Альтернативный метод: парсинг мета-тегов страницы подарка
-    async function getImageFromMetaTags(nftLink) {
-        try {
-            // Используем публичный CORS-прокси для получения HTML
-            const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(nftLink)}`;
-            const response = await fetch(proxyUrl);
-            const html = await response.text();
-            
-            // Ищем meta property="og:image"
-            const match = html.match(/<meta[^>]*property="og:image"[^>]*content="([^"]*)"/i);
-            if (match && match[1]) {
-                return match[1];
-            }
-            return null;
-        } catch(e) {
-            return null;
-        }
-    }
-    
-    // Главная функция загрузки картинки для подарка
-    async function loadImageForGift(gift) {
-        // Сначала пробуем через бота и CDN
-        let imageUrl = await getRealNFTImageFromBot(gift.link);
-        
-        // Если не получилось, пробуем через мета-теги
-        if (!imageUrl) {
-            imageUrl = await getImageFromMetaTags(gift.link);
-        }
-        
-        return imageUrl;
-    }
-    
-    // Функция отображения каталога
-    async function renderCatalog() {
+
+    function renderCatalog() {
         const container = document.getElementById('nftGrid');
-        container.innerHTML = '<div style="text-align:center; color:white; grid-column:1/-1;">🖼 Загрузка реальных изображений подарков...</div>';
+        if (!container) return;
+        container.innerHTML = '';
         
         if (gifts.length === 0) {
             container.innerHTML = '<div style="color:white; text-align:center; grid-column:1/-1;">Нет подарков в наличии</div>';
             return;
         }
         
-        container.innerHTML = '';
-        
-        for (const gift of gifts) {
+        gifts.forEach(gift => {
             const card = document.createElement('div');
             card.className = 'gift-card';
             
@@ -258,49 +104,18 @@
             const imgWrapper = document.createElement('div');
             imgWrapper.className = 'image-wrapper';
             
-            // Показываем загрузчик
-            const loader = document.createElement('div');
-            loader.className = 'loader';
-            imgWrapper.appendChild(loader);
-            
-            const img = document.createElement('img');
-            img.className = 'gift-image';
-            img.alt = gift.name;
-            img.style.display = 'none';
-            
-            // Загружаем реальную картинку
-            let imageLoaded = false;
-            
-            try {
-                const realImageUrl = await loadImageForGift(gift);
-                
-                if (realImageUrl) {
-                    img.src = realImageUrl;
-                    img.onload = () => {
-                        img.style.display = 'block';
-                        if (loader && loader.remove) loader.remove();
-                        imageLoaded = true;
-                    };
-                    img.onerror = () => {
-                        if (!imageLoaded) {
-                            usePlaceholder(img, loader, gift.name);
-                        }
-                    };
-                } else {
-                    usePlaceholder(img, loader, gift.name);
-                }
-            } catch(e) {
-                usePlaceholder(img, loader, gift.name);
+            // Вставляем iframe с превью из Telegram
+            const preview = createTelegramPreview(gift.link);
+            if (preview) {
+                imgWrapper.appendChild(preview);
+            } else {
+                // Fallback на случай ошибки
+                const fallback = document.createElement('div');
+                fallback.style.cssText = 'width:100%;aspect-ratio:1/1;background:#1a1a1a;display:flex;align-items:center;justify-content:center;border-radius:20px;';
+                fallback.innerText = '🎁';
+                imgWrapper.appendChild(fallback);
             }
             
-            // Таймаут на случай долгой загрузки (8 секунд)
-            setTimeout(() => {
-                if (!imageLoaded && loader && loader.parentNode) {
-                    usePlaceholder(img, loader, gift.name);
-                }
-            }, 8000);
-            
-            imgWrapper.appendChild(img);
             link.appendChild(imgWrapper);
             
             const nameSpan = document.createElement('div');
@@ -315,26 +130,9 @@
             
             card.appendChild(link);
             container.appendChild(card);
-        }
+        });
     }
     
-    function usePlaceholder(img, loader, name) {
-        // Временный placeholder (показывается ТОЛЬКО если реальную картинку не удалось загрузить)
-        // Выбираем иконку по названию
-        let icon = "🎁";
-        if (name.toLowerCase().includes("cream")) icon = "🍦";
-        else if (name.toLowerCase().includes("star")) icon = "⭐";
-        else if (name.toLowerCase().includes("gold")) icon = "🌟";
-        else if (name.toLowerCase().includes("ghost")) icon = "👻";
-        else if (name.toLowerCase().includes("neon")) icon = "🌈";
-        else if (name.toLowerCase().includes("diamond")) icon = "💎";
-        
-        img.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231e1e2f'/%3E%3Ctext x='50' y='55' font-size='48' text-anchor='middle' fill='white' dy='.3em'%3E${icon}%3C/text%3E%3Ctext x='50' y='82' font-size='11' text-anchor='middle' fill='%23999'%3E${name}%3C/text%3E%3C/svg%3E`;
-        img.style.display = 'block';
-        if (loader && loader.remove) loader.remove();
-    }
-    
-    // Запускаем загрузку каталога
     renderCatalog();
 </script>
 </body>
