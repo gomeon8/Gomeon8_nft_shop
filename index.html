@@ -8,8 +8,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: #000000;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            padding: 20px 16px 80px 16px; /* Добавил отступ снизу чтобы не перекрывать кнопку */
+            font-family: 'Segoe UI', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+            padding: 20px 16px 80px 16px;
             color: white;
         }
         .grid {
@@ -23,7 +23,12 @@
         .gift-card:active { transform: scale(0.98); }
         .image-wrapper { background: #ffffff; border-radius: 24px; padding: 8px; margin-bottom: 12px; }
         .gift-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 20px; display: block; }
-        .gift-name { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+        .gift-name { 
+            font-weight: 600; 
+            font-size: 15px; 
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
         .gift-price {
             font-size: 16px;
             font-weight: 700;
@@ -31,16 +36,17 @@
             display: inline-block;
             padding: 4px 12px;
             border-radius: 40px;
+            letter-spacing: 0.3px;
         }
         .gift-price::before { content: "₽ "; }
         .gift-link { text-decoration: none; display: block; cursor: pointer; color: white; }
         .footer-note { text-align: center; margin-top: 40px; font-size: 13px; color: #aaa; border-top: 1px solid #222; padding-top: 24px; }
 
-        /* --- СТИЛИ ДЛЯ ПЛАВАЮЩЕЙ КНОПКИ И МЕНЮ --- */
+        /* --- ПЛАВАЮЩАЯ КНОПКА И МЕНЮ --- */
         .fab {
             position: fixed;
             bottom: 20px;
-            left: 20px;  /* Левая нижняя часть */
+            left: 20px;
             width: 56px;
             height: 56px;
             background-color: #555;
@@ -54,7 +60,6 @@
             z-index: 1000;
         }
         .fab:active { background-color: #3a3a3a; }
-        /* Три полоски (бургер) */
         .fab span {
             display: block;
             width: 22px;
@@ -63,15 +68,15 @@
             margin: 5px 0;
             border-radius: 2px;
         }
-        /* Выпадающее меню (появляется справа от кнопки) */
+        /* Меню сортировки (тёмно-серое, плавное появление) */
         .sort-menu {
             position: fixed;
-            bottom: 80px;  /* Чуть выше кнопки */
+            bottom: 80px;
             left: 20px;
             background-color: #2c2c2e;
             border-radius: 16px;
             padding: 8px 0;
-            min-width: 180px;
+            min-width: 200px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
             opacity: 0;
             transform: translateX(-20px);
@@ -92,9 +97,12 @@
             padding: 12px 20px;
             width: 100%;
             text-align: left;
-            font-size: 16px;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
             cursor: pointer;
             transition: background 0.1s;
+            font-family: inherit;
         }
         .sort-menu button:active {
             background-color: #3a3a3c;
@@ -107,7 +115,8 @@
             .gift-name { font-size: 13px; }
             .gift-price { font-size: 14px; }
             .fab { width: 48px; height: 48px; bottom: 16px; left: 16px; }
-            .sort-menu { bottom: 74px; left: 16px; min-width: 160px; }
+            .sort-menu { bottom: 74px; left: 16px; min-width: 180px; }
+            .sort-menu button { font-size: 14px; padding: 10px 16px; }
         }
     </style>
 </head>
@@ -116,7 +125,7 @@
 <div class="grid" id="nftGrid"></div>
 <div class="footer-note">🔥 Нажми на подарок → он откроется в Telegram</div>
 
-<!-- Плавающая кнопка -->
+<!-- Плавающая кнопка (три полоски) -->
 <div class="fab" id="sortFab">
     <div>
         <span></span>
@@ -130,11 +139,13 @@
     <button id="sortAsc">📈 Цена по возрастанию</button>
     <hr>
     <button id="sortDesc">📉 Цена по убыванию</button>
+    <hr>
+    <button id="sortReset">🔄 Сбросить</button>
 </div>
 
 <script>
-    // ----- ТВОИ ПОДАРКИ -----
-    let gifts = [
+    // ----- ОРИГИНАЛЬНЫЙ ПОРЯДОК ПОДАРКОВ (НЕ МЕНЯТЬ) -----
+    const originalGifts = [
         { id: 1, name: "Vice Cream", price: 465, link: "https://t.me/nft/ViceCream-347944", imageUrl: "https://i.ibb.co/Mkv383Q6/IMG-20260425-122848-677.jpg" },
         { id: 2, name: "Instant Ramen", price: 525, link: "https://t.me/nft/InstantRamen-92332", imageUrl: "https://i.ibb.co/4nPN2rS1/Screenshot-20260425-142016-Telegram.jpg" },
         { id: 3, name: "Happy Brownie", price: 630, link: "https://t.me/nft/HappyBrownie-174834", imageUrl: "https://i.ibb.co/vxpnrYK4/IMG-20260425-160241-272.jpg" },
@@ -146,7 +157,10 @@
         { id: 9, name: "Restless Jar", price: 4650, link: "https://t.me/nft/RestlessJar-43217", imageUrl: "https://i.ibb.co/xSGNT2CG/IMG-20260425-185541-193.jpg" }
     ];
 
-    // Функция отрисовки сетки
+    // Копия для сортировки
+    let currentGifts = [...originalGifts];
+
+    // Функция отрисовки
     function renderGrid(data) {
         const container = document.getElementById('nftGrid');
         if (!container) return;
@@ -187,9 +201,7 @@
         });
     }
 
-    // --- ЛОГИКА СОРТИРОВКИ ---
-    let currentGifts = [...gifts]; // копия для отображения
-
+    // ----- ФУНКЦИИ СОРТИРОВКИ -----
     function sortByPriceAsc() {
         currentGifts.sort((a, b) => a.price - b.price);
         renderGrid(currentGifts);
@@ -200,27 +212,31 @@
         renderGrid(currentGifts);
     }
 
-    // --- УПРАВЛЕНИЕ МЕНЮ (кнопка с тремя полосками) ---
+    function resetOrder() {
+        // Восстанавливаем исходный порядок (как в originalGifts)
+        currentGifts = [...originalGifts];
+        renderGrid(currentGifts);
+    }
+
+    // ----- УПРАВЛЕНИЕ МЕНЮ -----
     const fabBtn = document.getElementById('sortFab');
     const menu = document.getElementById('sortMenu');
 
-    // Открыть/закрыть меню по клику на кнопку
     fabBtn.addEventListener('click', (event) => {
         event.stopPropagation();
         menu.classList.toggle('show');
     });
 
-    // Закрыть меню если кликнуть вне него (на любое другое место экрана)
     document.addEventListener('click', function(event) {
         if (!fabBtn.contains(event.target) && !menu.contains(event.target)) {
             menu.classList.remove('show');
         }
     });
 
-    // Обработка сортировки
+    // Назначаем кнопкам сортировку
     document.getElementById('sortAsc').addEventListener('click', () => {
         sortByPriceAsc();
-        menu.classList.remove('show'); // закрыть меню после выбора
+        menu.classList.remove('show');
     });
 
     document.getElementById('sortDesc').addEventListener('click', () => {
@@ -228,8 +244,15 @@
         menu.classList.remove('show');
     });
 
-    // Первоначальный рендер
+    document.getElementById('sortReset').addEventListener('click', () => {
+        resetOrder();
+        menu.classList.remove('show');
+    });
+
+    // Первоначальная отрисовка
     renderGrid(currentGifts);
 </script>
 </body>
 </html>
+
+
