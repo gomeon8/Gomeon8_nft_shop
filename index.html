@@ -6,17 +6,109 @@
     <title>NFT Подарки</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: #000000; font-family: system-ui; padding: 20px 16px 40px; color: white; }
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 12px; max-width: 900px; margin: 0 auto; }
-        .gift-card { text-align: center; }
+        body {
+            background-color: #000000;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px 16px 80px 16px; /* Добавил отступ снизу чтобы не перекрывать кнопку */
+            color: white;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px 12px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .gift-card { text-align: center; transition: transform 0.1s ease; }
+        .gift-card:active { transform: scale(0.98); }
         .image-wrapper { background: #ffffff; border-radius: 24px; padding: 8px; margin-bottom: 12px; }
         .gift-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 20px; display: block; }
         .gift-name { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
-        .gift-price { font-size: 16px; font-weight: 700; background: #a971c8; display: inline-block; padding: 4px 12px; border-radius: 40px; }
+        .gift-price {
+            font-size: 16px;
+            font-weight: 700;
+            background: #a971c8;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 40px;
+        }
         .gift-price::before { content: "₽ "; }
         .gift-link { text-decoration: none; display: block; cursor: pointer; color: white; }
         .footer-note { text-align: center; margin-top: 40px; font-size: 13px; color: #aaa; border-top: 1px solid #222; padding-top: 24px; }
-        @media (max-width: 560px) { .gift-name { font-size: 13px; } .gift-price { font-size: 14px; } }
+
+        /* --- СТИЛИ ДЛЯ ПЛАВАЮЩЕЙ КНОПКИ И МЕНЮ --- */
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;  /* Левая нижняя часть */
+            width: 56px;
+            height: 56px;
+            background-color: #555;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: background 0.2s;
+            z-index: 1000;
+        }
+        .fab:active { background-color: #3a3a3a; }
+        /* Три полоски (бургер) */
+        .fab span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background-color: white;
+            margin: 5px 0;
+            border-radius: 2px;
+        }
+        /* Выпадающее меню (появляется справа от кнопки) */
+        .sort-menu {
+            position: fixed;
+            bottom: 80px;  /* Чуть выше кнопки */
+            left: 20px;
+            background-color: #2c2c2e;
+            border-radius: 16px;
+            padding: 8px 0;
+            min-width: 180px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            opacity: 0;
+            transform: translateX(-20px);
+            visibility: hidden;
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+            z-index: 999;
+            backdrop-filter: blur(10px);
+        }
+        .sort-menu.show {
+            opacity: 1;
+            transform: translateX(0);
+            visibility: visible;
+        }
+        .sort-menu button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            width: 100%;
+            text-align: left;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+        .sort-menu button:active {
+            background-color: #3a3a3c;
+        }
+        hr {
+            margin: 4px 0;
+            border-color: #3a3a3c;
+        }
+        @media (max-width: 560px) {
+            .gift-name { font-size: 13px; }
+            .gift-price { font-size: 14px; }
+            .fab { width: 48px; height: 48px; bottom: 16px; left: 16px; }
+            .sort-menu { bottom: 74px; left: 16px; min-width: 160px; }
+        }
     </style>
 </head>
 <body>
@@ -24,110 +116,120 @@
 <div class="grid" id="nftGrid"></div>
 <div class="footer-note">🔥 Нажми на подарок → он откроется в Telegram</div>
 
+<!-- Плавающая кнопка -->
+<div class="fab" id="sortFab">
+    <div>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
+
+<!-- Меню сортировки -->
+<div class="sort-menu" id="sortMenu">
+    <button id="sortAsc">📈 Цена по возрастанию</button>
+    <hr>
+    <button id="sortDesc">📉 Цена по убыванию</button>
+</div>
+
 <script>
-    const gifts = [
-        {
-            id: 1,
-            name: "Vice Cream",
-            price: 465,
-            link: "https://t.me/nft/ViceCream-347944",
-            imageUrl: "https://i.ibb.co/Mkv383Q6/IMG-20260425-122848-677.jpg"
-        },
-        {
-            id: 2,
-            name: "Instant Ramen",
-            price: 525,
-            link: "https://t.me/nft/InstantRamen-92332",
-            imageUrl: "https://i.ibb.co/4nPN2rS1/Screenshot-20260425-142016-Telegram.jpg"
-        },
-        {
-            id: 3,
-            name: "Happy Brownie",
-            price: 630,
-            link: "https://t.me/nft/HappyBrownie-174834",
-            imageUrl: "https://i.ibb.co/vxpnrYK4/IMG-20260425-160241-272.jpg"  
-        },
-        {
-            id: 4,
-            name: "Jingle Bells",
-            price: 1290,
-            link: "http://t.me/nft/JingleBells-28899",
-            imageUrl: "https://i.ibb.co/h1YNmH8k/IMG-20260425-183559-003.jpg"  
-        },
-        {
-            id: 5,
-            name: "Chill Flame",
-            price: 683,
-            link: "https://t.me/nft/ChillFlame-197348",
-            imageUrl: "https://i.ibb.co/Vpw6Cd7x/IMG-20260425-171429-926.jpg"
-        },
-        {
-            id: 6,
-            name: "Jingle Bells",
-            price: 1710,
-            link: "https://t.me/nft/JingleBells-40161",
-            imageUrl: "https://i.ibb.co/8gZtKMQF/IMG-20260425-184216-883.jpg"
-        },
-        {
-            id: 7,
-            name: "Desk Calendar",
-            price: 2257,
-            link: "https://t.me/nft/DeskCalendar-233899",
-            imageUrl: "https://i.ibb.co/fGChLYDq/IMG-20260425-184633-206.jpg"
-        },
-        {
-            id: 8,
-            name: "Victory Medal",
-            price: 8100,
-            link: "https://t.me/nft/VictoryMedal-12550",
-            imageUrl: "https://i.ibb.co/SDcM2FmR/IMG-20260425-185100-731.jpg"
-        },
-        {
-            id: 9,
-            name: "Restless Jar",
-            price: 4650,
-            link: "https://t.me/nft/RestlessJar-43217",
-            imageUrl: "https://i.ibb.co/xSGNT2CG/IMG-20260425-185541-193.jpg"
-        }
-        
+    // ----- ТВОИ ПОДАРКИ -----
+    let gifts = [
+        { id: 1, name: "Vice Cream", price: 465, link: "https://t.me/nft/ViceCream-347944", imageUrl: "https://i.ibb.co/Mkv383Q6/IMG-20260425-122848-677.jpg" },
+        { id: 2, name: "Instant Ramen", price: 525, link: "https://t.me/nft/InstantRamen-92332", imageUrl: "https://i.ibb.co/4nPN2rS1/Screenshot-20260425-142016-Telegram.jpg" },
+        { id: 3, name: "Happy Brownie", price: 630, link: "https://t.me/nft/HappyBrownie-174834", imageUrl: "https://i.ibb.co/vxpnrYK4/IMG-20260425-160241-272.jpg" },
+        { id: 4, name: "Jingle Bells", price: 1290, link: "http://t.me/nft/JingleBells-28899", imageUrl: "https://i.ibb.co/h1YNmH8k/IMG-20260425-183559-003.jpg" },
+        { id: 5, name: "Chill Flame", price: 683, link: "https://t.me/nft/ChillFlame-197348", imageUrl: "https://i.ibb.co/Vpw6Cd7x/IMG-20260425-171429-926.jpg" },
+        { id: 6, name: "Jingle Bells", price: 1710, link: "https://t.me/nft/JingleBells-40161", imageUrl: "https://i.ibb.co/8gZtKMQF/IMG-20260425-184216-883.jpg" },
+        { id: 7, name: "Desk Calendar", price: 2257, link: "https://t.me/nft/DeskCalendar-233899", imageUrl: "https://i.ibb.co/fGChLYDq/IMG-20260425-184633-206.jpg" },
+        { id: 8, name: "Victory Medal", price: 8100, link: "https://t.me/nft/VictoryMedal-12550", imageUrl: "https://i.ibb.co/SDcM2FmR/IMG-20260425-185100-731.jpg" },
+        { id: 9, name: "Restless Jar", price: 4650, link: "https://t.me/nft/RestlessJar-43217", imageUrl: "https://i.ibb.co/xSGNT2CG/IMG-20260425-185541-193.jpg" }
     ];
 
-    const container = document.getElementById('nftGrid');
-    container.innerHTML = '';
+    // Функция отрисовки сетки
+    function renderGrid(data) {
+        const container = document.getElementById('nftGrid');
+        if (!container) return;
+        container.innerHTML = '';
+        
+        data.forEach(gift => {
+            const card = document.createElement('div');
+            card.className = 'gift-card';
+            
+            const a = document.createElement('a');
+            a.href = gift.link;
+            a.className = 'gift-link';
+            a.target = '_blank';
+            
+            const wrapper = document.createElement('div');
+            wrapper.className = 'image-wrapper';
+            
+            const img = document.createElement('img');
+            img.className = 'gift-img';
+            img.src = gift.imageUrl || "https://i.ibb.co/placeholder.jpg";
+            img.alt = gift.name;
+            
+            wrapper.appendChild(img);
+            a.appendChild(wrapper);
+            
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'gift-name';
+            nameDiv.innerText = gift.name;
+            
+            const priceDiv = document.createElement('div');
+            priceDiv.className = 'gift-price';
+            priceDiv.innerText = gift.price;
+            
+            a.appendChild(nameDiv);
+            a.appendChild(priceDiv);
+            card.appendChild(a);
+            container.appendChild(card);
+        });
+    }
 
-    gifts.forEach(gift => {
-        const card = document.createElement('div');
-        card.className = 'gift-card';
-        
-        const a = document.createElement('a');
-        a.href = gift.link;
-        a.className = 'gift-link';
-        a.target = '_blank';
-        
-        const wrapper = document.createElement('div');
-        wrapper.className = 'image-wrapper';
-        
-        const img = document.createElement('img');
-        img.className = 'gift-img';
-        img.src = gift.imageUrl || "https://i.ibb.co/placeholder.jpg"; // Если нет картинки - покажет заглушку
-        img.alt = gift.name;
-        
-        wrapper.appendChild(img);
-        a.appendChild(wrapper);
-        
-        const nameDiv = document.createElement('div');
-        nameDiv.className = 'gift-name';
-        nameDiv.innerText = gift.name;
-        
-        const priceDiv = document.createElement('div');
-        priceDiv.className = 'gift-price';
-        priceDiv.innerText = gift.price;
-        
-        a.appendChild(nameDiv);
-        a.appendChild(priceDiv);
-        card.appendChild(a);
-        container.appendChild(card);
+    // --- ЛОГИКА СОРТИРОВКИ ---
+    let currentGifts = [...gifts]; // копия для отображения
+
+    function sortByPriceAsc() {
+        currentGifts.sort((a, b) => a.price - b.price);
+        renderGrid(currentGifts);
+    }
+
+    function sortByPriceDesc() {
+        currentGifts.sort((a, b) => b.price - a.price);
+        renderGrid(currentGifts);
+    }
+
+    // --- УПРАВЛЕНИЕ МЕНЮ (кнопка с тремя полосками) ---
+    const fabBtn = document.getElementById('sortFab');
+    const menu = document.getElementById('sortMenu');
+
+    // Открыть/закрыть меню по клику на кнопку
+    fabBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        menu.classList.toggle('show');
     });
+
+    // Закрыть меню если кликнуть вне него (на любое другое место экрана)
+    document.addEventListener('click', function(event) {
+        if (!fabBtn.contains(event.target) && !menu.contains(event.target)) {
+            menu.classList.remove('show');
+        }
+    });
+
+    // Обработка сортировки
+    document.getElementById('sortAsc').addEventListener('click', () => {
+        sortByPriceAsc();
+        menu.classList.remove('show'); // закрыть меню после выбора
+    });
+
+    document.getElementById('sortDesc').addEventListener('click', () => {
+        sortByPriceDesc();
+        menu.classList.remove('show');
+    });
+
+    // Первоначальный рендер
+    renderGrid(currentGifts);
 </script>
 </body>
 </html>
