@@ -3,83 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>NFT Подарки | Каталог</title>
+    <title>NFT Подарки | Живые анимации</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: #000000; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 20px 16px 40px 16px; color: white; }
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 12px; max-width: 900px; margin: 0 auto; }
-        .gift-card { text-align: center; }
-        .image-wrapper { background: #ffffff; border-radius: 24px; padding: 8px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(255,255,255,0.05); min-height: 200px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .gift-card { text-align: center; background: transparent; border-radius: 24px; transition: transform 0.1s ease; }
+        .gift-card:active { transform: scale(0.97); }
+        .image-wrapper { background: #ffffff; border-radius: 24px; padding: 8px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(255,255,255,0.05); }
+        .gift-video { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 20px; display: block; background-color: #1a1a1a; }
         .gift-name { font-weight: 600; font-size: 15px; color: white; margin-bottom: 6px; word-break: break-word; }
-        .gift-price { font-size: 16px; font-weight: 700; color: white; background: rgba(255,255,255,0.08); display: inline-block; padding: 4px 12px; border-radius: 40px; }
-        .gift-price::before { content: "₽ "; }
+        .gift-price { font-size: 16px; font-weight: 700; color: white; background: rgba(255,255,255,0.1); display: inline-block; padding: 4px 14px; border-radius: 40px; letter-spacing: 0.3px; }
+        .gift-price::before { content: "₽ "; font-weight: 500; }
         .gift-link { text-decoration: none; display: block; cursor: pointer; }
-        .footer-note { text-align: center; margin-top: 40px; font-size: 13px; color: #aaa; border-top: 1px solid #222; padding-top: 24px; }
-        
-        /* Стили для встроенного Telegram-виджета */
-        .telegram-embed {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            border: none;
-            border-radius: 20px;
-            background: #1a1a1a;
-        }
-        
-        @media (max-width: 560px) { 
-            .gift-name { font-size: 13px; } 
-            .gift-price { font-size: 14px; padding: 3px 10px; } 
-            .image-wrapper { border-radius: 20px; padding: 6px; min-height: 150px; }
+        .footer-note { text-align: center; margin-top: 40px; font-size: 13px; color: #aaa; border-top: 1px solid #222; padding-top: 24px; max-width: 900px; margin-left: auto; margin-right: auto; }
+        @media (max-width: 560px) {
+            body { padding: 16px 12px 32px 12px; }
+            .grid { gap: 16px 10px; }
+            .gift-name { font-size: 13px; }
+            .gift-price { font-size: 14px; padding: 3px 10px; }
+            .image-wrapper { border-radius: 20px; padding: 6px; }
         }
     </style>
 </head>
 <body>
 
 <div class="grid" id="nftGrid"></div>
-<div class="footer-note">
-    🔥 Нажми на подарок → откроется в Telegram с полной анимацией<br>
-    🎬 Анимированные изображения подгружаются автоматически
-</div>
+<div class="footer-note">🎬 Анимация запускается автоматически<br>👇 Нажми на подарок → откроется в Telegram</div>
 
 <script>
     // ============================================================
-    // ЗДЕСЬ ТЫ МЕНЯЕШЬ ПОДАРКИ (ДОБАВЛЯЙ, МЕНЯЙ ЦЕНЫ)
+    // ТВОЙ КАТАЛОГ ПОДАРКОВ (меняй названия, цены и ссылки на видео)
     // ============================================================
     const gifts = [
         {
             id: 1,
             name: "Vice Cream",
             price: 567,
-            link: "https://t.me/nft/ViceCream-347944"
+            link: "https://t.me/nft/ViceCream-347944",
+            // Это ссылка на живую анимацию подарка (MP4)
+            videoUrl: "https://cdn.pixabay.com/video/2023/06/28/169923-835844355_large.mp4"
         }
-        // Добавляй новые подарки сюда:
+        // КАК ДОБАВИТЬ НОВЫЙ ПОДАРОК:
         // {
         //     id: 2,
-        //     name: "Gold Star",
-        //     price: 899,
-        //     link: "https://t.me/nft/GoldStar-123456"
+        //     name: "Название подарка",
+        //     price: 999,
+        //     link: "https://t.me/nft/твой_подарок",
+        //     videoUrl: "https://ссылка_на_анимацию.mp4"
         // }
     ];
-
-    // Функция создания iframe с превью из Telegram
-    function createTelegramPreview(nftLink) {
-        // Извлекаем ID подарка
-        const match = nftLink.match(/t\.me\/nft\/([a-zA-Z0-9\-]+)/);
-        if (!match) return null;
-        
-        const nftId = match[1];
-        
-        // Используем официальный Telegram Embed URL
-        // Этот виджет показывает ТО ЖЕ изображение, что и в чате Telegram
-        const embedUrl = `https://t.me/nft/${nftId}?embed=1&mode=tg`;
-        
-        const iframe = document.createElement('iframe');
-        iframe.src = embedUrl;
-        iframe.className = 'telegram-embed';
-        iframe.loading = 'lazy';
-        iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms allow-same-origin');
-        
-        return iframe;
-    }
 
     function renderCatalog() {
         const container = document.getElementById('nftGrid');
@@ -91,7 +64,7 @@
             return;
         }
         
-        gifts.forEach(gift => {
+        for (let gift of gifts) {
             const card = document.createElement('div');
             card.className = 'gift-card';
             
@@ -104,33 +77,38 @@
             const imgWrapper = document.createElement('div');
             imgWrapper.className = 'image-wrapper';
             
-            // Вставляем iframe с превью из Telegram
-            const preview = createTelegramPreview(gift.link);
-            if (preview) {
-                imgWrapper.appendChild(preview);
-            } else {
-                // Fallback на случай ошибки
-                const fallback = document.createElement('div');
-                fallback.style.cssText = 'width:100%;aspect-ratio:1/1;background:#1a1a1a;display:flex;align-items:center;justify-content:center;border-radius:20px;';
-                fallback.innerText = '🎁';
-                imgWrapper.appendChild(fallback);
-            }
+            // Видеоплеер с автозапуском (без звука)
+            const video = document.createElement('video');
+            video.className = 'gift-video';
+            video.loop = true;
+            video.muted = true;
+            video.autoplay = true;
+            video.playsInline = true;
+            video.src = gift.videoUrl;
             
+            // Если видео не загрузилось — показываем красивый плейсхолдер
+            video.onerror = () => {
+                video.style.background = "#1e1e2f";
+                video.poster = "";
+                video.outerHTML = `<div style="width:100%;aspect-ratio:1/1;background:#1e1e2f;display:flex;align-items:center;justify-content:center;border-radius:20px;font-size:48px;">🎁</div>`;
+            };
+            
+            imgWrapper.appendChild(video);
             link.appendChild(imgWrapper);
             
-            const nameSpan = document.createElement('div');
-            nameSpan.className = 'gift-name';
-            nameSpan.innerText = gift.name;
-            link.appendChild(nameSpan);
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'gift-name';
+            nameDiv.innerText = gift.name;
+            link.appendChild(nameDiv);
             
-            const priceSpan = document.createElement('div');
-            priceSpan.className = 'gift-price';
-            priceSpan.innerText = gift.price;
-            link.appendChild(priceSpan);
+            const priceDiv = document.createElement('div');
+            priceDiv.className = 'gift-price';
+            priceDiv.innerText = gift.price;
+            link.appendChild(priceDiv);
             
             card.appendChild(link);
             container.appendChild(card);
-        });
+        }
     }
     
     renderCatalog();
