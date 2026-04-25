@@ -76,7 +76,7 @@
             background-color: #2c2c2e;
             border-radius: 16px;
             padding: 8px 0;
-            min-width: 240px;
+            min-width: 260px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
             opacity: 0;
             transform: translateX(-20px);
@@ -128,10 +128,10 @@
             background: #1c1c1e;
             border: 1px solid #3a3a3c;
             color: white;
-            padding: 8px 12px;
+            padding: 10px 12px;
             border-radius: 12px;
-            width: 85px;
-            font-size: 14px;
+            width: 90px;
+            font-size: 15px;
             text-align: center;
             font-family: inherit;
         }
@@ -141,25 +141,29 @@
         }
         .price-inputs span {
             color: #aaa;
-            font-size: 14px;
+            font-size: 16px;
+            font-weight: 500;
         }
+        /* НОВЫЙ СТИЛЬ КНОПКИ "ПРОДОЛЖИТЬ" — большой округленный прямоугольник */
         .apply-btn {
-            background-color: #555;
+            background-color: #4a4a4d;  /* серый, светлее чем меню */
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 40px;
+            padding: 10px 20px;
+            border-radius: 30px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 15px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
             font-family: inherit;
             width: auto;
-            margin-left: auto;
+            min-width: 110px;
+            letter-spacing: 0.5px;
+            text-align: center;
         }
         .apply-btn.active {
-            background-color: #f5c542;
-            color: #1c1c1e;
+            background-color: #f5c542;  /* жёлтый */
+            color: #1c1c1e;             /* чёрный шрифт */
             font-weight: 700;
         }
         .filter-label {
@@ -167,15 +171,16 @@
             color: #aaa;
             margin-bottom: 5px;
             display: block;
+            font-weight: 500;
         }
         @media (max-width: 560px) {
             .gift-name { font-size: 13px; }
             .gift-price { font-size: 14px; }
             .fab { width: 48px; height: 48px; bottom: 16px; left: 16px; }
-            .sort-menu { bottom: 74px; left: 16px; min-width: 220px; }
+            .sort-menu { bottom: 74px; left: 16px; min-width: 240px; }
             .sort-menu button { font-size: 14px; padding: 10px 16px; }
-            .price-inputs input { width: 70px; padding: 6px 8px; }
-            .apply-btn { padding: 6px 14px; font-size: 13px; }
+            .price-inputs input { width: 75px; padding: 8px 8px; font-size: 14px; }
+            .apply-btn { padding: 8px 16px; font-size: 14px; min-width: 95px; }
         }
     </style>
 </head>
@@ -200,7 +205,7 @@
     <button id="sortDesc">📉 Цена по убыванию</button>
     <hr>
     
-    <!-- НОВЫЙ БЛОК: ФИЛЬТР ПО ЦЕНЕ -->
+    <!-- БЛОК ФИЛЬТРА ПО ЦЕНЕ -->
     <div class="filter-range">
         <div class="filter-label">💰 Фильтр по цене</div>
         <div class="price-inputs">
@@ -230,7 +235,6 @@
 
     let currentGifts = [...originalGifts];
 
-    // Функция отрисовки
     function renderGrid(data) {
         const container = document.getElementById('nftGrid');
         if (!container) return;
@@ -271,7 +275,6 @@
         });
     }
 
-    // ----- ФУНКЦИИ СОРТИРОВКИ И ФИЛЬТРАЦИИ -----
     function sortByPriceAsc() {
         currentGifts.sort((a, b) => a.price - b.price);
         renderGrid(currentGifts);
@@ -283,7 +286,6 @@
     }
 
     function filterByPrice(minPrice, maxPrice) {
-        // Фильтруем подарки, оставляем только те, чья цена в промежутке [minPrice, maxPrice]
         const filtered = originalGifts.filter(gift => gift.price >= minPrice && gift.price <= maxPrice);
         currentGifts = [...filtered];
         renderGrid(currentGifts);
@@ -292,15 +294,12 @@
     function resetOrder() {
         currentGifts = [...originalGifts];
         renderGrid(currentGifts);
-        // Очищаем поля ввода
         document.getElementById('minPrice').value = '';
         document.getElementById('maxPrice').value = '';
-        // Меняем кнопку обратно на серую
         const applyBtn = document.getElementById('applyFilterBtn');
         applyBtn.classList.remove('active');
     }
 
-    // ----- ЛОГИКА ДЛЯ КНОПКИ "ПРОДОЛЖИТЬ" (меняет цвет) -----
     function checkApplyButtonState() {
         const minVal = document.getElementById('minPrice').value;
         const maxVal = document.getElementById('maxPrice').value;
@@ -313,29 +312,22 @@
         }
     }
 
-    // Применение фильтра при нажатии на "Продолжить"
     function applyFilter() {
         const minVal = document.getElementById('minPrice').value;
         const maxVal = document.getElementById('maxPrice').value;
         
-        if (minVal === '' || maxVal === '') {
-            // Если поля не заполнены — ничего не делаем
-            return;
-        }
+        if (minVal === '' || maxVal === '') return;
         
         const min = Number(minVal);
         const max = Number(maxVal);
         
-        if (isNaN(min) || isNaN(max) || min > max) {
-            // Неправильные числа или "от" больше "до" — игнорируем
-            return;
-        }
+        if (isNaN(min) || isNaN(max) || min > max) return;
         
         filterByPrice(min, max);
-        menu.classList.remove('show'); // закрываем меню после применения
+        menu.classList.remove('show');
     }
 
-    // ----- УПРАВЛЕНИЕ МЕНЮ -----
+    // --- Управление меню ---
     const fabBtn = document.getElementById('sortFab');
     const menu = document.getElementById('sortMenu');
 
@@ -350,7 +342,6 @@
         }
     });
 
-    // Назначаем кнопкам действие
     document.getElementById('sortAsc').addEventListener('click', () => {
         sortByPriceAsc();
         menu.classList.remove('show');
@@ -366,17 +357,14 @@
         menu.classList.remove('show');
     });
 
-    // Слушаем изменения в полях "от" и "до", чтобы менять цвет кнопки
     const minInput = document.getElementById('minPrice');
     const maxInput = document.getElementById('maxPrice');
     minInput.addEventListener('input', checkApplyButtonState);
     maxInput.addEventListener('input', checkApplyButtonState);
 
-    // Кнопка "Продолжить"
     const applyBtn = document.getElementById('applyFilterBtn');
     applyBtn.addEventListener('click', applyFilter);
 
-    // Первоначальная отрисовка
     renderGrid(currentGifts);
 </script>
 </body>
