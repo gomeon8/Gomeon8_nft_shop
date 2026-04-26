@@ -42,7 +42,6 @@
         .gift-link { text-decoration: none; display: block; cursor: pointer; color: white; }
         .footer-note { text-align: center; margin-top: 40px; font-size: 13px; color: #aaa; border-top: 1px solid #222; padding-top: 24px; }
 
-        /* --- ПЛАВАЮЩАЯ КНОПКА И МЕНЮ --- */
         .fab {
             position: fixed;
             bottom: 20px;
@@ -68,7 +67,6 @@
             margin: 5px 0;
             border-radius: 2px;
         }
-        /* Меню сортировки (тёмно-серое, плавное появление) */
         .sort-menu {
             position: fixed;
             bottom: 80px;
@@ -77,6 +75,8 @@
             border-radius: 16px;
             padding: 8px 0;
             min-width: 260px;
+            max-height: 70vh;
+            overflow-y: auto;
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
             opacity: 0;
             transform: translateX(-20px);
@@ -111,7 +111,6 @@
             margin: 4px 0;
             border-color: #3a3a3c;
         }
-        /* Блок фильтра по цене */
         .filter-range {
             padding: 12px 16px;
             display: flex;
@@ -144,9 +143,8 @@
             font-size: 16px;
             font-weight: 500;
         }
-        /* НОВЫЙ СТИЛЬ КНОПКИ "ПРОДОЛЖИТЬ" — большой округленный прямоугольник */
         .apply-btn {
-            background-color: #4a4a4d;  /* серый, светлее чем меню */
+            background-color: #4a4a4d;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -162,8 +160,8 @@
             text-align: center;
         }
         .apply-btn.active {
-            background-color: #f5c542;  /* жёлтый */
-            color: #1c1c1e;             /* чёрный шрифт */
+            background-color: #f5c542;
+            color: #1c1c1e;
             font-weight: 700;
         }
         .filter-label {
@@ -173,6 +171,182 @@
             display: block;
             font-weight: 500;
         }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+        .modal-overlay.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-content {
+            background-color: #2c2c2e;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        .modal-header {
+            padding: 16px;
+            border-bottom: 1px solid #3a3a3c;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        .close-modal:active {
+            background-color: #3a3a3c;
+        }
+        .search-box {
+            padding: 12px 16px;
+            border-bottom: 1px solid #3a3a3c;
+        }
+        .search-box input {
+            width: 100%;
+            background: #1c1c1e;
+            border: 1px solid #3a3a3c;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: #a971c8;
+        }
+        .backgrounds-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+        .bg-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+        .bg-item:active {
+            background-color: #3a3a3c;
+        }
+        .color-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid white;
+            flex-shrink: 0;
+        }
+        .bg-name {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .bg-checkbox {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid #888;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.1s;
+            flex-shrink: 0;
+        }
+        .bg-checkbox.checked {
+            background: white;
+            border-color: white;
+        }
+        .bg-checkbox.checked::after {
+            content: "✓";
+            color: black;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .select-all-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid #3a3a3c;
+            background: #2c2c2e;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .select-all-text {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .modal-footer {
+            padding: 12px 16px;
+            border-top: 1px solid #3a3a3c;
+            display: flex;
+            gap: 12px;
+            background: #2c2c2e;
+            position: sticky;
+            bottom: 0;
+        }
+        .clear-btn {
+            flex: 1;
+            background: #4a4a4d;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .show-btn {
+            flex: 1;
+            background: #f5c542;
+            color: #1c1c1e;
+            border: none;
+            padding: 12px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .clear-btn:active, .show-btn:active {
+            opacity: 0.8;
+        }
         @media (max-width: 560px) {
             .gift-name { font-size: 13px; }
             .gift-price { font-size: 14px; }
@@ -181,6 +355,8 @@
             .sort-menu button { font-size: 14px; padding: 10px 16px; }
             .price-inputs input { width: 75px; padding: 8px 8px; font-size: 14px; }
             .apply-btn { padding: 8px 16px; font-size: 14px; min-width: 95px; }
+            .bg-name { font-size: 13px; }
+            .color-circle { width: 28px; height: 28px; }
         }
     </style>
 </head>
@@ -189,7 +365,6 @@
 <div class="grid" id="nftGrid"></div>
 <div class="footer-note">🔥 Нажми на подарок → он откроется в Telegram</div>
 
-<!-- Плавающая кнопка (три полоски) -->
 <div class="fab" id="sortFab">
     <div>
         <span></span>
@@ -198,14 +373,13 @@
     </div>
 </div>
 
-<!-- Меню сортировки -->
 <div class="sort-menu" id="sortMenu">
+    <button id="openBgFilterBtn">🎨 Выбрать фон</button>
+    <hr>
     <button id="sortAsc">📈 Цена по возрастанию</button>
     <hr>
     <button id="sortDesc">📉 Цена по убыванию</button>
     <hr>
-    
-    <!-- БЛОК ФИЛЬТРА ПО ЦЕНЕ -->
     <div class="filter-range">
         <div class="filter-label">💰 Фильтр по цене</div>
         <div class="price-inputs">
@@ -219,64 +393,81 @@
     <button id="sortReset">🔄 Сбросить</button>
 </div>
 
-<script>
-    // ----- ОРИГИНАЛЬНЫЙ ПОРЯДОК ПОДАРКОВ -----
+<div class="modal-overlay" id="bgModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Выбрать фон</h3>
+            <button class="close-modal" id="closeModalBtn">✕</button>
+        </div>
+        <div class="search-box">
+            <input type="text" id="searchBg" placeholder="Поиск фонов...">
+        </div>
+        <div class="select-all-row">
+            <span class="select-all-text">Выбрать все</span>
+            <div class="bg-checkbox" id="selectAllCheckbox"></div>
+        </div>
+        <div class="backgrounds-list" id="backgroundsList"></div>
+        <div class="modal-footer">
+            <button class="clear-btn" id="clearBgBtn">Очистить все</button>
+            <button class="show-btn" id="showResultsBtn">Показать результаты</button>
+        </div>
+    </div>
+</div>
+    <script>
+    const backgroundsList = [
+        "Rifle Green", "Roman Silver", "Rosewood", "Sapphire", "Satin Gold", "Seal Brown", "Shamrock Green", "Silver Blue", "Sky Blue", "Steel Grey", "Strawberry", "Tactical Pine", "Tomato", "Turquoise", "Neon Blue", "Old Gold", "Onyx Black", "Orange", "Pacific Cyan", "Pacific Green", "Persimmon", "Pine Green", "Pistachio", "Platinum", "Pure Gold", "Purple", "Ranger Green", "Raspberry", "Jade Green", "Khaki Green", "Lavender", "Lemongrass", "Light Olive", "Malachite", "Marine Blue", "Mexican Pink", "Midnight Blue", "Mint Green", "Moonstone", "Mustard", "Mystic Pearl", "Navy Blue", "Electric Purple", "Emerald", "English Violet", "Fandango", "Feldgrau", "Fire Engine", "French Blue", "French Violet", "Grape", "Gunmetal", "Gunship Green", "Hunter Green", "Indigo Dye", "Ivory White", "Carmine", "Carrot Juice", "Celtic Blue", "Chestnut", "Chocolate", "Cobalt Blue", "Copper", "Coral Red", "Cyberpunk", "Dark Green", "Dark Lilac", "Deep Cyan", "Desert Sand", "Electric Indigo", "Black", "Amber", "Aquamarine", "Azure Blue", "Battleship Grey", "Burgundy", "Burnt Sienna", "Camo Green", "Cappuccino", "Caramel"
+    ];
+    
+    const bgColorMap = {
+        "Rifle Green": "#434b40", "Roman Silver": "#838996", "Rosewood": "#9a6163", "Sapphire": "#558bc3", "Satin Gold": "#aa8c41", "Seal Brown": "#533e36", "Shamrock Green": "#71a253", "Silver Blue": "#8a9aad", "Sky Blue": "#549ec6", "Steel Grey": "#71797e", "Strawberry": "#cb7667", "Tactical Pine": "#366e69", "Tomato": "#de643f", "Turquoise": "#4ca9a4", "Neon Blue": "#6b79ea", "Old Gold": "#a47a2e", "Onyx Black": "#353839", "Orange": "#c8803f", "Pacific Cyan": "#4baab0", "Pacific Green": "#56b08c", "Persimmon": "#d3845b", "Pine Green": "#518c72", "Pistachio": "#71965e", "Platinum": "#9c9892", "Pure Gold": "#ad8f37", "Purple": "#965795", "Ranger Green": "#ab6041", "Raspberry": "#c8677f", "Jade Green": "#47ac88", "Khaki Green": "#86915e", "Lavender": "#9e6fce", "Lemongrass": "#77a14a", "Light Olive": "#a39753", "Malachite": "#63a455", "Marine Blue": "#405788", "Mexican Pink": "#d45384", "Midnight Blue": "#414e69", "Mint Green": "#62b46d", "Moonstone": "#65969f", "Mustard": "#cb850d", "Mystic Pearl": "#bd696e", "Navy Blue": "#617fd0", "Electric Purple": "#a966cd", "Emerald": "#59af75", "English Violet": "#986aa2", "Fandango": "#c26ea0", "Feldgrau": "#707c73", "Fire Engine": "#d84749", "French Blue": "#4581ab", "French Violet": "#a955df", "Grape": "#885cad", "Gunmetal": "#3d4b52", "Gunship Green": "#477459", "Hunter Green": "#689666", "Indigo Dye": "#496b83", "Ivory White": "#acaba5", "Carmine": "#c64640", "Carrot Juice": "#d18559", "Celtic Blue": "#399ce1", "Chestnut": "#a85943", "Chocolate": "#865344", "Cobalt Blue": "#5771bf", "Copper": "#ba7844", "Coral Red": "#ce725a", "Cyberpunk": "#8673e3", "Dark Green": "#3a5236", "Dark Lilac": "#9e688f", "Deep Cyan": "#23a4a1", "Desert Sand": "#928268", "Electric Indigo": "#786ee4", "Black": "#1b1b1b", "Amber": "#c19332", "Aquamarine": "#4fada4", "Azure Blue": "#4b99b5", "Battleship Grey": "#797a73", "Burgundy": "#824a54", "Burnt Sienna": "#c35831", "Camo Green": "#607d45", "Cappuccino": "#937667", "Caramel": "#c38530"
+    };
+
     const originalGifts = [
-        { id: 1, name: "Vice Cream", price: 465, link: "https://t.me/nft/ViceCream-347944", imageUrl: "https://i.ibb.co/Mkv383Q6/IMG-20260425-122848-677.jpg" },
-        { id: 2, name: "Instant Ramen", price: 525, link: "https://t.me/nft/InstantRamen-92332", imageUrl: "https://i.ibb.co/4nPN2rS1/Screenshot-20260425-142016-Telegram.jpg" },
-        { id: 3, name: "Happy Brownie", price: 630, link: "https://t.me/nft/HappyBrownie-174834", imageUrl: "https://i.ibb.co/vxpnrYK4/IMG-20260425-160241-272.jpg" },
-        { id: 4, name: "Jingle Bells", price: 1290, link: "http://t.me/nft/JingleBells-28899", imageUrl: "https://i.ibb.co/h1YNmH8k/IMG-20260425-183559-003.jpg" },
-        { id: 5, name: "Chill Flame", price: 683, link: "https://t.me/nft/ChillFlame-197348", imageUrl: "https://i.ibb.co/Vpw6Cd7x/IMG-20260425-171429-926.jpg" },
-        { id: 6, name: "Party Sparkler", price: 615, link: "https://t.me/nft/PartySparkler-170384", imageUrl: "https://i.ibb.co/Cs6WxfPp/IMG-20260426-004705-791.jpg" },
-        { id: 7, name: "Desk Calendar", price: 2257, link: "https://t.me/nft/DeskCalendar-233899", imageUrl: "https://i.ibb.co/fGChLYDq/IMG-20260425-184633-206.jpg" },
-        { id: 8, name: "Victory Medal", price: 8100, link: "https://t.me/nft/VictoryMedal-12550", imageUrl: "https://i.ibb.co/SDcM2FmR/IMG-20260425-185100-731.jpg" },
-        { id: 9, name: "Restless Jar", price: 4650, link: "https://t.me/nft/RestlessJar-43217", imageUrl: "https://i.ibb.co/xSGNT2CG/IMG-20260425-185541-193.jpg" },
-        { id: 10, name: "Whip Cupcake", price: 4080, link: "https://t.me/nft/WhipCupcake-154178", imageUrl: "https://i.ibb.co/3m65Cy6d/IMG-20260426-004707-125.jpg" },
-        { id: 11, name: "Whip Cupcake", price: 3840, link: "https://t.me/nft/WhipCupcake-87993", imageUrl: "https://i.ibb.co/9mShH8V7/IMG-20260426-115743-807.jpg" },
-        { id: 12, name: "Snake Box", price: 615, link: "https://t.me/nft/SnakeBox-63632", imageUrl: "https://i.ibb.co/GQRzFnyw/IMG-20260426-115421-003.jpg" },
-        { id: 13, name: "Mood Pack", price: 1108, link: "https://t.me/nft/MoodPack-152015", imageUrl: "https://i.ibb.co/KzFSpBbQ/IMG-20260426-124131-554.jpg" },
-        { id: 14, name: "Xmas Stocking", price: 5100, link: "https://t.me/nft/XmasStocking-4460", imageUrl: "https://i.ibb.co/1fT9Z09B/IMG-20260426-151043-813.jpg" }
-        
-        
-        
-        
+        { id: 1, name: "Vice Cream", price: 465, bg:"Fandango", link: "https://t.me/nft/ViceCream-347944", imageUrl: "https://i.ibb.co/Mkv383Q6/IMG-20260425-122848-677.jpg" },
+        { id: 2, name: "Instant Ramen", price: 525, bg:"Fandango", link: "https://t.me/nft/InstantRamen-92332", imageUrl: "https://i.ibb.co/4nPN2rS1/Screenshot-20260425-142016-Telegram.jpg" },
+        { id: 3, name: "Happy Brownie", price: 630, bg:"Tomato", link: "https://t.me/nft/HappyBrownie-174834", imageUrl: "https://i.ibb.co/vxpnrYK4/IMG-20260425-160241-272.jpg" },
+        { id: 4, name: "Jingle Bells", price: 1290, bg:"Aquamarine", link: "http://t.me/nft/JingleBells-28899", imageUrl: "https://i.ibb.co/h1YNmH8k/IMG-20260425-183559-003.jpg" },
+        { id: 5, name: "Chill Flame", price: 683, bg:"Satin Gold", link: "https://t.me/nft/ChillFlame-197348", imageUrl: "https://i.ibb.co/Vpw6Cd7x/IMG-20260425-171429-926.jpg" },
+        { id: 6, name: "Party Sparkler", price: 615, bg:"Malachite", link: "https://t.me/nft/PartySparkler-170384", imageUrl: "https://i.ibb.co/Cs6WxfPp/IMG-20260426-004705-791.jpg" },
+        { id: 7, name: "Desk Calendar", price: 2257, bg:"Purple", link: "https://t.me/nft/DeskCalendar-233899", imageUrl: "https://i.ibb.co/fGChLYDq/IMG-20260425-184633-206.jpg" },
+        { id: 8, name: "Victory Medal", price: 8100, bg:"Black", link: "https://t.me/nft/VictoryMedal-12550", imageUrl: "https://i.ibb.co/SDcM2FmR/IMG-20260425-185100-731.jpg" },
+        { id: 9, name: "Restless Jar", price: 4650, bg:"Black", link: "https://t.me/nft/RestlessJar-43217", imageUrl: "https://i.ibb.co/xSGNT2CG/IMG-20260425-185541-193.jpg" },
+        { id: 10, name: "Whip Cupcake", price: 4080, bg:"Black", link: "https://t.me/nft/WhipCupcake-154178", imageUrl: "https://i.ibb.co/3m65Cy6d/IMG-20260426-004707-125.jpg" },
+        { id: 11, name: "Whip Cupcake", price: 3840,bg:"Black", link: "https://t.me/nft/WhipCupcake-87993", imageUrl: "https://i.ibb.co/9mShH8V7/IMG-20260426-115743-807.jpg" },
+        { id: 12, name: "Snake Box", price: 615, bg:"English Violet", link: "https://t.me/nft/SnakeBox-63632", imageUrl: "https://i.ibb.co/GQRzFnyw/IMG-20260426-115421-003.jpg" },
+        { id: 13, name: "Mood Pack", price: 1108, bg:"Electric Indigo", link: "https://t.me/nft/MoodPack-152015", imageUrl: "https://i.ibb.co/KzFSpBbQ/IMG-20260426-124131-554.jpg" },
+        { id: 14, name: "Xmas Stocking", price: 5100, bg:"Black", link: "https://t.me/nft/XmasStocking-4460", imageUrl: "https://i.ibb.co/1fT9Z09B/IMG-20260426-151043-813.jpg" }
     ];
 
     let currentGifts = [...originalGifts];
+    let selectedBackgrounds = [];
+    let currentBgFilter = null;
 
     function renderGrid(data) {
         const container = document.getElementById('nftGrid');
         if (!container) return;
         container.innerHTML = '';
-        
         data.forEach(gift => {
             const card = document.createElement('div');
             card.className = 'gift-card';
-            
             const a = document.createElement('a');
             a.href = gift.link;
             a.className = 'gift-link';
             a.target = '_blank';
-            
             const wrapper = document.createElement('div');
             wrapper.className = 'image-wrapper';
-            
             const img = document.createElement('img');
             img.className = 'gift-img';
             img.src = gift.imageUrl;
             img.alt = gift.name;
-            
             wrapper.appendChild(img);
             a.appendChild(wrapper);
-            
             const nameDiv = document.createElement('div');
             nameDiv.className = 'gift-name';
             nameDiv.innerText = gift.name;
-            
             const priceDiv = document.createElement('div');
             priceDiv.className = 'gift-price';
             priceDiv.innerText = gift.price;
-            
             a.appendChild(nameDiv);
             a.appendChild(priceDiv);
             card.appendChild(a);
@@ -284,99 +475,126 @@
         });
     }
 
-    function sortByPriceAsc() {
-        currentGifts.sort((a, b) => a.price - b.price);
-        renderGrid(currentGifts);
-    }
-
-    function sortByPriceDesc() {
-        currentGifts.sort((a, b) => b.price - a.price);
-        renderGrid(currentGifts);
-    }
-
-    function filterByPrice(minPrice, maxPrice) {
-        const filtered = originalGifts.filter(gift => gift.price >= minPrice && gift.price <= maxPrice);
-        currentGifts = [...filtered];
-        renderGrid(currentGifts);
-    }
-
-    function resetOrder() {
-        currentGifts = [...originalGifts];
-        renderGrid(currentGifts);
-        document.getElementById('minPrice').value = '';
-        document.getElementById('maxPrice').value = '';
-        const applyBtn = document.getElementById('applyFilterBtn');
-        applyBtn.classList.remove('active');
-    }
-
-    function checkApplyButtonState() {
-        const minVal = document.getElementById('minPrice').value;
-        const maxVal = document.getElementById('maxPrice').value;
-        const applyBtn = document.getElementById('applyFilterBtn');
-        
-        if (minVal !== '' && maxVal !== '') {
-            applyBtn.classList.add('active');
+    function applyBackgroundFilter() {
+        if (!currentBgFilter || currentBgFilter.length === 0) {
+            currentGifts = [...originalGifts];
         } else {
-            applyBtn.classList.remove('active');
+            currentGifts = [...originalGifts];
+        }
+        renderGrid(currentGifts);
+    }
+
+    const modal = document.getElementById('bgModal');
+    const openBgBtn = document.getElementById('openBgFilterBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const searchInput = document.getElementById('searchBg');
+    const backgroundsListDiv = document.getElementById('backgroundsList');
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    const clearBgBtn = document.getElementById('clearBgBtn');
+    const showResultsBtn = document.getElementById('showResultsBtn');
+
+    function updateSelectAllCheckbox() {
+        const visibleItems = document.querySelectorAll('.bg-item');
+        const visibleCheckboxes = Array.from(visibleItems).map(item => item.querySelector('.bg-checkbox'));
+        const allChecked = visibleCheckboxes.length > 0 && visibleCheckboxes.every(cb => cb.classList.contains('checked'));
+        if (allChecked) {
+            selectAllCheckbox.classList.add('checked');
+        } else {
+            selectAllCheckbox.classList.remove('checked');
         }
     }
 
-    function applyFilter() {
-        const minVal = document.getElementById('minPrice').value;
-        const maxVal = document.getElementById('maxPrice').value;
-        
-        if (minVal === '' || maxVal === '') return;
-        
-        const min = Number(minVal);
-        const max = Number(maxVal);
-        
-        if (isNaN(min) || isNaN(max) || min > max) return;
-        
-        filterByPrice(min, max);
-        menu.classList.remove('show');
+    function renderBackgrounds(filterText = '') {
+        let filtered = backgroundsList.filter(bg => bg.toLowerCase().includes(filterText.toLowerCase()));
+        filtered.sort((a, b) => {
+            const aSelected = selectedBackgrounds.includes(a);
+            const bSelected = selectedBackgrounds.includes(b);
+            if (aSelected && !bSelected) return -1;
+            if (!aSelected && bSelected) return 1;
+            return 0;
+        });
+        backgroundsListDiv.innerHTML = '';
+        filtered.forEach(bg => {
+            const div = document.createElement('div');
+            div.className = 'bg-item';
+            const color = bgColorMap[bg] || "#888888";
+            div.innerHTML = `<div class="color-circle" style="background: ${color};"></div><span class="bg-name">${bg}</span><div class="bg-checkbox ${selectedBackgrounds.includes(bg) ? 'checked' : ''}"></div>`;
+            div.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const checkbox = div.querySelector('.bg-checkbox');
+                if (selectedBackgrounds.includes(bg)) {
+                    selectedBackgrounds = selectedBackgrounds.filter(b => b !== bg);
+                    checkbox.classList.remove('checked');
+                } else {
+                    selectedBackgrounds.push(bg);
+                    checkbox.classList.add('checked');
+                }
+                updateSelectAllCheckbox();
+            });
+            backgroundsListDiv.appendChild(div);
+        });
+        updateSelectAllCheckbox();
     }
 
-    // --- Управление меню ---
+    openBgBtn.addEventListener('click', () => {
+        modal.classList.add('show');
+        renderBackgrounds(searchInput.value);
+    });
+    closeModalBtn.addEventListener('click', () => { modal.classList.remove('show'); });
+    searchInput.addEventListener('input', (e) => { renderBackgrounds(e.target.value); });
+    selectAllCheckbox.addEventListener('click', () => {
+        const visibleItems = document.querySelectorAll('.bg-item');
+        const isChecked = selectAllCheckbox.classList.contains('checked');
+        visibleItems.forEach(item => {
+            const bgName = item.querySelector('.bg-name').innerText;
+            const checkbox = item.querySelector('.bg-checkbox');
+            if (!isChecked) {
+                if (!selectedBackgrounds.includes(bgName)) selectedBackgrounds.push(bgName);
+                checkbox.classList.add('checked');
+            } else {
+                selectedBackgrounds = selectedBackgrounds.filter(b => b !== bgName);
+                checkbox.classList.remove('checked');
+            }
+        });
+        updateSelectAllCheckbox();
+        renderBackgrounds(searchInput.value);
+    });
+    clearBgBtn.addEventListener('click', () => {
+        selectedBackgrounds = [];
+        renderBackgrounds(searchInput.value);
+    });
+    showResultsBtn.addEventListener('click', () => {
+        currentBgFilter = [...selectedBackgrounds];
+        applyBackgroundFilter();
+        modal.classList.remove('show');
+    });
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
+
+    function sortByPriceAsc() { currentGifts.sort((a, b) => a.price - b.price); renderGrid(currentGifts); }
+    function sortByPriceDesc() { currentGifts.sort((a, b) => b.price - a.price); renderGrid(currentGifts); }
+    function filterByPrice(minPrice, maxPrice) { const filtered = originalGifts.filter(g => g.price >= minPrice && g.price <= maxPrice); currentGifts = [...filtered]; renderGrid(currentGifts); }
+    function resetOrder() { currentGifts = [...originalGifts]; currentBgFilter = null; selectedBackgrounds = []; renderGrid(currentGifts); document.getElementById('minPrice').value = ''; document.getElementById('maxPrice').value = ''; const applyBtn = document.getElementById('applyFilterBtn'); applyBtn.classList.remove('active'); }
+    function checkApplyButtonState() { const minVal = document.getElementById('minPrice').value; const maxVal = document.getElementById('maxPrice').value; const applyBtn = document.getElementById('applyFilterBtn'); if (minVal !== '' && maxVal !== '') { applyBtn.classList.add('active'); } else { applyBtn.classList.remove('active'); } }
+    function applyFilter() { const minVal = document.getElementById('minPrice').value; const maxVal = document.getElementById('maxPrice').value; if (minVal === '' || maxVal === '') return; const min = Number(minVal); const max = Number(maxVal); if (isNaN(min) || isNaN(max) || min > max) return; filterByPrice(min, max); menu.classList.remove('show'); }
+
     const fabBtn = document.getElementById('sortFab');
     const menu = document.getElementById('sortMenu');
-
-    fabBtn.addEventListener('click', (event) => {
-        event.stopPropagation();
-        menu.classList.toggle('show');
-    });
-
-    document.addEventListener('click', function(event) {
-        if (!fabBtn.contains(event.target) && !menu.contains(event.target)) {
-            menu.classList.remove('show');
-        }
-    });
-
-    document.getElementById('sortAsc').addEventListener('click', () => {
-        sortByPriceAsc();
-        menu.classList.remove('show');
-    });
-
-    document.getElementById('sortDesc').addEventListener('click', () => {
-        sortByPriceDesc();
-        menu.classList.remove('show');
-    });
-
-    document.getElementById('sortReset').addEventListener('click', () => {
-        resetOrder();
-        menu.classList.remove('show');
-    });
-
+    fabBtn.addEventListener('click', (event) => { event.stopPropagation(); menu.classList.toggle('show'); });
+    document.addEventListener('click', function(event) { if (!fabBtn.contains(event.target) && !menu.contains(event.target)) { menu.classList.remove('show'); } });
+    document.getElementById('sortAsc').addEventListener('click', () => { sortByPriceAsc(); menu.classList.remove('show'); });
+    document.getElementById('sortDesc').addEventListener('click', () => { sortByPriceDesc(); menu.classList.remove('show'); });
+    document.getElementById('sortReset').addEventListener('click', () => { resetOrder(); menu.classList.remove('show'); });
     const minInput = document.getElementById('minPrice');
     const maxInput = document.getElementById('maxPrice');
     minInput.addEventListener('input', checkApplyButtonState);
     maxInput.addEventListener('input', checkApplyButtonState);
-
     const applyBtn = document.getElementById('applyFilterBtn');
     applyBtn.addEventListener('click', applyFilter);
-
+    
     renderGrid(currentGifts);
 </script>
 </body>
 </html>
+    
 
 
