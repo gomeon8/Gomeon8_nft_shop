@@ -414,6 +414,7 @@
     </div>
 </div>
     <script>
+    // ----- СПИСОК ФОНОВ И ИХ ЦВЕТА -----
     const backgroundsList = [
         "Rifle Green", "Roman Silver", "Rosewood", "Sapphire", "Satin Gold", "Seal Brown", "Shamrock Green", "Silver Blue", "Sky Blue", "Steel Grey", "Strawberry", "Tactical Pine", "Tomato", "Turquoise", "Neon Blue", "Old Gold", "Onyx Black", "Orange", "Pacific Cyan", "Pacific Green", "Persimmon", "Pine Green", "Pistachio", "Platinum", "Pure Gold", "Purple", "Ranger Green", "Raspberry", "Jade Green", "Khaki Green", "Lavender", "Lemongrass", "Light Olive", "Malachite", "Marine Blue", "Mexican Pink", "Midnight Blue", "Mint Green", "Moonstone", "Mustard", "Mystic Pearl", "Navy Blue", "Electric Purple", "Emerald", "English Violet", "Fandango", "Feldgrau", "Fire Engine", "French Blue", "French Violet", "Grape", "Gunmetal", "Gunship Green", "Hunter Green", "Indigo Dye", "Ivory White", "Carmine", "Carrot Juice", "Celtic Blue", "Chestnut", "Chocolate", "Cobalt Blue", "Copper", "Coral Red", "Cyberpunk", "Dark Green", "Dark Lilac", "Deep Cyan", "Desert Sand", "Electric Indigo", "Black", "Amber", "Aquamarine", "Azure Blue", "Battleship Grey", "Burgundy", "Burnt Sienna", "Camo Green", "Cappuccino", "Caramel"
     ];
@@ -422,21 +423,24 @@
         "Rifle Green": "#434b40", "Roman Silver": "#838996", "Rosewood": "#9a6163", "Sapphire": "#558bc3", "Satin Gold": "#aa8c41", "Seal Brown": "#533e36", "Shamrock Green": "#71a253", "Silver Blue": "#8a9aad", "Sky Blue": "#549ec6", "Steel Grey": "#71797e", "Strawberry": "#cb7667", "Tactical Pine": "#366e69", "Tomato": "#de643f", "Turquoise": "#4ca9a4", "Neon Blue": "#6b79ea", "Old Gold": "#a47a2e", "Onyx Black": "#353839", "Orange": "#c8803f", "Pacific Cyan": "#4baab0", "Pacific Green": "#56b08c", "Persimmon": "#d3845b", "Pine Green": "#518c72", "Pistachio": "#71965e", "Platinum": "#9c9892", "Pure Gold": "#ad8f37", "Purple": "#965795", "Ranger Green": "#ab6041", "Raspberry": "#c8677f", "Jade Green": "#47ac88", "Khaki Green": "#86915e", "Lavender": "#9e6fce", "Lemongrass": "#77a14a", "Light Olive": "#a39753", "Malachite": "#63a455", "Marine Blue": "#405788", "Mexican Pink": "#d45384", "Midnight Blue": "#414e69", "Mint Green": "#62b46d", "Moonstone": "#65969f", "Mustard": "#cb850d", "Mystic Pearl": "#bd696e", "Navy Blue": "#617fd0", "Electric Purple": "#a966cd", "Emerald": "#59af75", "English Violet": "#986aa2", "Fandango": "#c26ea0", "Feldgrau": "#707c73", "Fire Engine": "#d84749", "French Blue": "#4581ab", "French Violet": "#a955df", "Grape": "#885cad", "Gunmetal": "#3d4b52", "Gunship Green": "#477459", "Hunter Green": "#689666", "Indigo Dye": "#496b83", "Ivory White": "#acaba5", "Carmine": "#c64640", "Carrot Juice": "#d18559", "Celtic Blue": "#399ce1", "Chestnut": "#a85943", "Chocolate": "#865344", "Cobalt Blue": "#5771bf", "Copper": "#ba7844", "Coral Red": "#ce725a", "Cyberpunk": "#8673e3", "Dark Green": "#3a5236", "Dark Lilac": "#9e688f", "Deep Cyan": "#23a4a1", "Desert Sand": "#928268", "Electric Indigo": "#786ee4", "Black": "#1b1b1b", "Amber": "#c19332", "Aquamarine": "#4fada4", "Azure Blue": "#4b99b5", "Battleship Grey": "#797a73", "Burgundy": "#824a54", "Burnt Sienna": "#c35831", "Camo Green": "#607d45", "Cappuccino": "#937667", "Caramel": "#c38530"
     };
 
+    // ----- ТВОИ ПОДАРКИ (ТЕПЕРЬ С ФОНАМИ!) -----
+    // ⚠️ ВНИМАНИЕ: Здесь я добавил поле "bg" для каждого подарка.
+    // Если фон не указан — поставь нужный из списка выше.
     const originalGifts = [
-        { id: 1, name: "Vice Cream", price: 465, bg:"Fandango", link: "https://t.me/nft/ViceCream-347944", imageUrl: "https://i.ibb.co/Mkv383Q6/IMG-20260425-122848-677.jpg" },
-        { id: 2, name: "Instant Ramen", price: 525, bg:"Fandango", link: "https://t.me/nft/InstantRamen-92332", imageUrl: "https://i.ibb.co/4nPN2rS1/Screenshot-20260425-142016-Telegram.jpg" },
-        { id: 3, name: "Happy Brownie", price: 630, bg:"Tomato", link: "https://t.me/nft/HappyBrownie-174834", imageUrl: "https://i.ibb.co/vxpnrYK4/IMG-20260425-160241-272.jpg" },
-        { id: 4, name: "Jingle Bells", price: 1290, bg:"Aquamarine", link: "http://t.me/nft/JingleBells-28899", imageUrl: "https://i.ibb.co/h1YNmH8k/IMG-20260425-183559-003.jpg" },
-        { id: 5, name: "Chill Flame", price: 683, bg:"Satin Gold", link: "https://t.me/nft/ChillFlame-197348", imageUrl: "https://i.ibb.co/Vpw6Cd7x/IMG-20260425-171429-926.jpg" },
-        { id: 6, name: "Party Sparkler", price: 615, bg:"Malachite", link: "https://t.me/nft/PartySparkler-170384", imageUrl: "https://i.ibb.co/Cs6WxfPp/IMG-20260426-004705-791.jpg" },
-        { id: 7, name: "Desk Calendar", price: 2257, bg:"Purple", link: "https://t.me/nft/DeskCalendar-233899", imageUrl: "https://i.ibb.co/fGChLYDq/IMG-20260425-184633-206.jpg" },
-        { id: 8, name: "Victory Medal", price: 8100, bg:"Black", link: "https://t.me/nft/VictoryMedal-12550", imageUrl: "https://i.ibb.co/SDcM2FmR/IMG-20260425-185100-731.jpg" },
-        { id: 9, name: "Restless Jar", price: 4650, bg:"Black", link: "https://t.me/nft/RestlessJar-43217", imageUrl: "https://i.ibb.co/xSGNT2CG/IMG-20260425-185541-193.jpg" },
-        { id: 10, name: "Whip Cupcake", price: 4080, bg:"Black", link: "https://t.me/nft/WhipCupcake-154178", imageUrl: "https://i.ibb.co/3m65Cy6d/IMG-20260426-004707-125.jpg" },
-        { id: 11, name: "Whip Cupcake", price: 3840,bg:"Black", link: "https://t.me/nft/WhipCupcake-87993", imageUrl: "https://i.ibb.co/9mShH8V7/IMG-20260426-115743-807.jpg" },
-        { id: 12, name: "Snake Box", price: 615, bg:"English Violet", link: "https://t.me/nft/SnakeBox-63632", imageUrl: "https://i.ibb.co/GQRzFnyw/IMG-20260426-115421-003.jpg" },
-        { id: 13, name: "Mood Pack", price: 1108, bg:"Electric Indigo", link: "https://t.me/nft/MoodPack-152015", imageUrl: "https://i.ibb.co/KzFSpBbQ/IMG-20260426-124131-554.jpg" },
-        { id: 14, name: "Xmas Stocking", price: 5100, bg:"Black", link: "https://t.me/nft/XmasStocking-4460", imageUrl: "https://i.ibb.co/1fT9Z09B/IMG-20260426-151043-813.jpg" }
+        { id: 1, name: "Vice Cream", price: 465, bg: "Fandango", link: "https://t.me/nft/ViceCream-347944", imageUrl: "https://i.ibb.co/Mkv383Q6/IMG-20260425-122848-677.jpg" },
+        { id: 2, name: "Instant Ramen", price: 525, bg: "Fandango", link: "https://t.me/nft/InstantRamen-92332", imageUrl: "https://i.ibb.co/4nPN2rS1/Screenshot-20260425-142016-Telegram.jpg" },
+        { id: 3, name: "Happy Brownie", price: 630, bg: "Tomato", link: "https://t.me/nft/HappyBrownie-174834", imageUrl: "https://i.ibb.co/vxpnrYK4/IMG-20260425-160241-272.jpg" },
+        { id: 4, name: "Jingle Bells", price: 1290, bg: "Aquamarine", link: "http://t.me/nft/JingleBells-28899", imageUrl: "https://i.ibb.co/h1YNmH8k/IMG-20260425-183559-003.jpg" },
+        { id: 5, name: "Chill Flame", price: 683, bg: "Satin Gold", link: "https://t.me/nft/ChillFlame-197348", imageUrl: "https://i.ibb.co/Vpw6Cd7x/IMG-20260425-171429-926.jpg" },
+        { id: 6, name: "Party Sparkler", price: 615, bg: "Malachite", link: "https://t.me/nft/PartySparkler-170384", imageUrl: "https://i.ibb.co/Cs6WxfPp/IMG-20260426-004705-791.jpg" },
+        { id: 7, name: "Desk Calendar", price: 2257, bg: "Purple", link: "https://t.me/nft/DeskCalendar-233899", imageUrl: "https://i.ibb.co/fGChLYDq/IMG-20260425-184633-206.jpg" },
+        { id: 8, name: "Victory Medal", price: 8100, bg: "Black", link: "https://t.me/nft/VictoryMedal-12550", imageUrl: "https://i.ibb.co/SDcM2FmR/IMG-20260425-185100-731.jpg" },
+        { id: 9, name: "Restless Jar", price: 4650, bg: "Black", link: "https://t.me/nft/RestlessJar-43217", imageUrl: "https://i.ibb.co/xSGNT2CG/IMG-20260425-185541-193.jpg" },
+        { id: 10, name: "Whip Cupcake", price: 4080, bg: "Black", link: "https://t.me/nft/WhipCupcake-154178", imageUrl: "https://i.ibb.co/3m65Cy6d/IMG-20260426-004707-125.jpg" },
+        { id: 11, name: "Whip Cupcake", price: 3840,bg: "Black", link: "https://t.me/nft/WhipCupcake-87993", imageUrl: "https://i.ibb.co/9mShH8V7/IMG-20260426-115743-807.jpg" },
+        { id: 12, name: "Snake Box", price: 615, bg: "English Violet", link: "https://t.me/nft/SnakeBox-63632", imageUrl: "https://i.ibb.co/GQRzFnyw/IMG-20260426-115421-003.jpg" },
+        { id: 13, name: "Mood Pack", price: 1108, bg: "Electric Indigo", link: "https://t.me/nft/MoodPack-152015", imageUrl: "https://i.ibb.co/KzFSpBbQ/IMG-20260426-124131-554.jpg" },
+        { id: 14, name: "Xmas Stocking", price: 5100, bg: "Black", link: "https://t.me/nft/XmasStocking-4460", imageUrl: "https://i.ibb.co/1fT9Z09B/IMG-20260426-151043-813.jpg" }
     ];
 
     let currentGifts = [...originalGifts];
@@ -475,15 +479,19 @@
         });
     }
 
+    // ФИЛЬТРАЦИЯ ПО ФОНАМ (ТЕПЕРЬ РАБОТАЕТ!)
     function applyBackgroundFilter() {
         if (!currentBgFilter || currentBgFilter.length === 0) {
+            // Если фоны не выбраны — показываем всё
             currentGifts = [...originalGifts];
         } else {
-            currentGifts = [...originalGifts];
+            // Оставляем только те подарки, у которых фон входит в выбранные
+            currentGifts = originalGifts.filter(gift => currentBgFilter.includes(gift.bg));
         }
         renderGrid(currentGifts);
     }
 
+    // ----- ЛОГИКА МОДАЛЬНОГО ОКНА ФОНОВ -----
     const modal = document.getElementById('bgModal');
     const openBgBtn = document.getElementById('openBgFilterBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -506,6 +514,7 @@
 
     function renderBackgrounds(filterText = '') {
         let filtered = backgroundsList.filter(bg => bg.toLowerCase().includes(filterText.toLowerCase()));
+        // Сортируем: выбранные вверху
         filtered.sort((a, b) => {
             const aSelected = selectedBackgrounds.includes(a);
             const bSelected = selectedBackgrounds.includes(b);
@@ -570,13 +579,46 @@
     });
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
 
+    // ----- СОРТИРОВКА ПО ЦЕНЕ И ФИЛЬТР -----
     function sortByPriceAsc() { currentGifts.sort((a, b) => a.price - b.price); renderGrid(currentGifts); }
     function sortByPriceDesc() { currentGifts.sort((a, b) => b.price - a.price); renderGrid(currentGifts); }
-    function filterByPrice(minPrice, maxPrice) { const filtered = originalGifts.filter(g => g.price >= minPrice && g.price <= maxPrice); currentGifts = [...filtered]; renderGrid(currentGifts); }
-    function resetOrder() { currentGifts = [...originalGifts]; currentBgFilter = null; selectedBackgrounds = []; renderGrid(currentGifts); document.getElementById('minPrice').value = ''; document.getElementById('maxPrice').value = ''; const applyBtn = document.getElementById('applyFilterBtn'); applyBtn.classList.remove('active'); }
-    function checkApplyButtonState() { const minVal = document.getElementById('minPrice').value; const maxVal = document.getElementById('maxPrice').value; const applyBtn = document.getElementById('applyFilterBtn'); if (minVal !== '' && maxVal !== '') { applyBtn.classList.add('active'); } else { applyBtn.classList.remove('active'); } }
-    function applyFilter() { const minVal = document.getElementById('minPrice').value; const maxVal = document.getElementById('maxPrice').value; if (minVal === '' || maxVal === '') return; const min = Number(minVal); const max = Number(maxVal); if (isNaN(min) || isNaN(max) || min > max) return; filterByPrice(min, max); menu.classList.remove('show'); }
+    function filterByPrice(minPrice, maxPrice) { 
+        const filtered = originalGifts.filter(g => g.price >= minPrice && g.price <= maxPrice);
+        currentGifts = [...filtered];
+        renderGrid(currentGifts);
+    }
+    function resetOrder() { 
+        currentGifts = [...originalGifts]; 
+        currentBgFilter = null; 
+        selectedBackgrounds = []; 
+        renderGrid(currentGifts); 
+        document.getElementById('minPrice').value = ''; 
+        document.getElementById('maxPrice').value = ''; 
+        const applyBtn = document.getElementById('applyFilterBtn'); 
+        applyBtn.classList.remove('active'); 
+    }
+    function checkApplyButtonState() { 
+        const minVal = document.getElementById('minPrice').value; 
+        const maxVal = document.getElementById('maxPrice').value; 
+        const applyBtn = document.getElementById('applyFilterBtn'); 
+        if (minVal !== '' && maxVal !== '') { 
+            applyBtn.classList.add('active'); 
+        } else { 
+            applyBtn.classList.remove('active'); 
+        } 
+    }
+    function applyFilter() { 
+        const minVal = document.getElementById('minPrice').value; 
+        const maxVal = document.getElementById('maxPrice').value; 
+        if (minVal === '' || maxVal === '') return; 
+        const min = Number(minVal); 
+        const max = Number(maxVal); 
+        if (isNaN(min) || isNaN(max) || min > max) return; 
+        filterByPrice(min, max); 
+        menu.classList.remove('show'); 
+    }
 
+    // ----- УПРАВЛЕНИЕ ГЛАВНЫМ МЕНЮ -----
     const fabBtn = document.getElementById('sortFab');
     const menu = document.getElementById('sortMenu');
     fabBtn.addEventListener('click', (event) => { event.stopPropagation(); menu.classList.toggle('show'); });
@@ -584,6 +626,7 @@
     document.getElementById('sortAsc').addEventListener('click', () => { sortByPriceAsc(); menu.classList.remove('show'); });
     document.getElementById('sortDesc').addEventListener('click', () => { sortByPriceDesc(); menu.classList.remove('show'); });
     document.getElementById('sortReset').addEventListener('click', () => { resetOrder(); menu.classList.remove('show'); });
+    
     const minInput = document.getElementById('minPrice');
     const maxInput = document.getElementById('maxPrice');
     minInput.addEventListener('input', checkApplyButtonState);
@@ -595,6 +638,7 @@
 </script>
 </body>
 </html>
+
     
 
 
