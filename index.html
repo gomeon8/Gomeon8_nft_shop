@@ -390,18 +390,18 @@
 <body>
 
 <div class="grid" id="nftGrid"></div>
-<div class="footer-note">🔥 Задержи палец на подарке → появятся действия</div>
+<div class="footer-note">🔥 Зажми подарок</div>
 
 <div class="fab" id="sortFab">
     <div><span></span><span></span><span></span></div>
 </div>
 
 <div class="sort-menu" id="sortMenu">
-    <button id="openBgFilterBtn">🎨 Выбрать фон</button>
+    <button id="openBgFilterBtn"> Выбрать фон</button>
     <hr>
-    <button id="sortAsc">📈 Цена по возрастанию</button>
+    <button id="sortAsc"> Цена по возрастанию</button>
     <hr>
-    <button id="sortDesc">📉 Цена по убыванию</button>
+    <button id="sortDesc"> Цена по убыванию</button>
     <hr>
     <div class="filter-range">
         <div class="filter-label">💰 Фильтр по цене</div>
@@ -438,8 +438,8 @@
 </div>
 
 <div id="actionPopup" class="action-popup">
-    <button id="actionMessageBtn" class="action-btn">✉️ Написать владельцу</button>
-    <button id="actionViewBtn" class="action-btn">👁️ Посмотреть подарок</button>
+    <button id="actionMessageBtn" class="action-btn"> Написать владельцу</button>
+    <button id="actionViewBtn" class="action-btn"> Посмотреть подарок</button>
 </div>
     <script>
     // ----- СПИСОК ФОНОВ -----
@@ -473,7 +473,6 @@
     let activeGift = null;
     let longPressTimer = null;
 
-    // Функция отрисовки
     function renderGrid(data) {
         const container = document.getElementById('nftGrid');
         if (!container) return;
@@ -505,21 +504,23 @@
             card.appendChild(nameDiv);
             card.appendChild(priceDiv);
             
-            // Обработка долгого нажатия
+            // Исправленные обработчики — без лишних preventDefault
             card.addEventListener('touchstart', (e) => {
-                e.preventDefault();
+                // Не вызываем preventDefault, чтобы не ломать скролл
                 longPressTimer = setTimeout(() => {
-                    showActionPopup(e.touches[0].clientX, e.touches[0].clientY, gift);
+                    const rect = card.getBoundingClientRect();
+                    const x = rect.left + rect.width / 2;
+                    const y = rect.top + rect.height / 2;
+                    showActionPopup(x, y, gift);
                 }, 500);
             });
-            card.addEventListener('touchend', (e) => {
-                e.preventDefault();
+            card.addEventListener('touchend', () => {
                 if (longPressTimer) {
                     clearTimeout(longPressTimer);
                     longPressTimer = null;
                 }
             });
-            card.addEventListener('touchmove', (e) => {
+            card.addEventListener('touchmove', () => {
                 if (longPressTimer) {
                     clearTimeout(longPressTimer);
                     longPressTimer = null;
@@ -530,7 +531,6 @@
         });
     }
 
-    // Показать плашку с действиями
     const popup = document.getElementById('actionPopup');
     const actionMessageBtn = document.getElementById('actionMessageBtn');
     const actionViewBtn = document.getElementById('actionViewBtn');
@@ -558,7 +558,6 @@
         document.removeEventListener('touchstart', closePopupOnOutside);
     }
 
-    // Написать владельцу
     actionMessageBtn.addEventListener('click', () => {
         if (!activeGift) return;
         const text = `Привет, хотел бы приобрести этот подарок ${activeGift.link}, ${activeGift.price}₽`;
@@ -566,14 +565,12 @@
         hidePopup();
     });
 
-    // Посмотреть подарок
     actionViewBtn.addEventListener('click', () => {
         if (!activeGift) return;
         window.open(activeGift.link, '_blank');
         hidePopup();
     });
 
-    // Фильтрация по фонам
     function applyBackgroundFilter() {
         if (!currentBgFilter || currentBgFilter.length === 0) {
             currentGifts = [...originalGifts];
@@ -583,7 +580,6 @@
         renderGrid(currentGifts);
     }
 
-    // Логика модального окна фонов
     const modal = document.getElementById('bgModal');
     const openBgBtn = document.getElementById('openBgFilterBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -667,7 +663,6 @@
     });
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
 
-    // Сортировка и фильтры
     function sortByPriceAsc() { currentGifts.sort((a, b) => a.price - b.price); renderGrid(currentGifts); }
     function sortByPriceDesc() { currentGifts.sort((a, b) => b.price - a.price); renderGrid(currentGifts); }
     function filterByPrice(minPrice, maxPrice) { 
