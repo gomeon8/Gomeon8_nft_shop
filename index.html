@@ -20,7 +20,7 @@
             margin: 0 auto;
         }
         .gift-card { text-align: center; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-        .image-wrapper { background: #ffffff; border-radius: 24px; padding: 8px; margin-bottom: 12px; }
+        .image-wrapper { background: #ffffff; border-radius: 24px; padding: 8px; margin-bottom: 12px; position: relative; }
         .gift-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 20px; display: block; pointer-events: none; }
         .gift-name { 
             font-weight: 600; 
@@ -172,7 +172,6 @@
             font-weight: 500;
         }
 
-        /* Модальное окно выбора фонов */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -258,10 +257,9 @@
         }
         .bg-item:active { background-color: #3a3a3c; }
         .color-circle {
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            border: 2px solid white;
             flex-shrink: 0;
         }
         .bg-name {
@@ -338,14 +336,15 @@
         }
         .clear-btn:active, .show-btn:active { opacity: 0.8; }
 
-        /* ПЛАШКА ПРИ ДОЛГОМ НАЖАТИИ */
+        /* ПЛАШКА С КНОПКАМИ (снизу от картинки, со стрелкой) */
         .action-popup {
             position: fixed;
             background-color: #2c2c2e;
-            border-radius: 20px;
-            padding: 12px;
+            border-radius: 16px;
+            padding: 8px 12px;
             display: flex;
-            gap: 12px;
+            flex-direction: column;
+            gap: 8px;
             z-index: 1200;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
             backdrop-filter: blur(10px);
@@ -356,6 +355,19 @@
         .action-popup.show {
             opacity: 1;
             visibility: visible;
+        }
+        /* Стрелочка-треугольник сверху */
+        .action-popup::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #2c2c2e;
         }
         .action-btn {
             background: #3a3a3c;
@@ -368,6 +380,9 @@
             cursor: pointer;
             font-family: inherit;
             transition: background 0.1s;
+            white-space: nowrap;
+            width: 100%;
+            text-align: center;
         }
         .action-btn:active {
             background: #4a4a4d;
@@ -382,15 +397,15 @@
             .price-inputs input { width: 75px; padding: 8px 8px; font-size: 14px; }
             .apply-btn { padding: 8px 16px; font-size: 14px; min-width: 95px; }
             .bg-name { font-size: 13px; }
-            .color-circle { width: 28px; height: 28px; }
             .action-btn { padding: 8px 16px; font-size: 13px; }
+            .color-circle { width: 36px; height: 36px; }
         }
     </style>
 </head>
 <body>
 
 <div class="grid" id="nftGrid"></div>
-<div class="footer-note">🔥 Зажми подарок</div>
+<div class="footer-note">🔥 Нажми на подарок → появятся действия</div>
 
 <div class="fab" id="sortFab">
     <div><span></span><span></span><span></span></div>
@@ -437,7 +452,7 @@
     </div>
 </div>
 
-<div id="actionPopup" class="action-popup">
+<div id="actionPopup" class="action-popup" style="display: none;">
     <button id="actionMessageBtn" class="action-btn"> Написать владельцу</button>
     <button id="actionViewBtn" class="action-btn"> Посмотреть подарок</button>
 </div>
@@ -451,10 +466,10 @@
         "Rifle Green": "#434b40", "Roman Silver": "#838996", "Rosewood": "#9a6163", "Sapphire": "#558bc3", "Satin Gold": "#aa8c41", "Seal Brown": "#533e36", "Shamrock Green": "#71a253", "Silver Blue": "#8a9aad", "Sky Blue": "#549ec6", "Steel Grey": "#71797e", "Strawberry": "#cb7667", "Tactical Pine": "#366e69", "Tomato": "#de643f", "Turquoise": "#4ca9a4", "Neon Blue": "#6b79ea", "Old Gold": "#a47a2e", "Onyx Black": "#353839", "Orange": "#c8803f", "Pacific Cyan": "#4baab0", "Pacific Green": "#56b08c", "Persimmon": "#d3845b", "Pine Green": "#518c72", "Pistachio": "#71965e", "Platinum": "#9c9892", "Pure Gold": "#ad8f37", "Purple": "#965795", "Ranger Green": "#ab6041", "Raspberry": "#c8677f", "Jade Green": "#47ac88", "Khaki Green": "#86915e", "Lavender": "#9e6fce", "Lemongrass": "#77a14a", "Light Olive": "#a39753", "Malachite": "#63a455", "Marine Blue": "#405788", "Mexican Pink": "#d45384", "Midnight Blue": "#414e69", "Mint Green": "#62b46d", "Moonstone": "#65969f", "Mustard": "#cb850d", "Mystic Pearl": "#bd696e", "Navy Blue": "#617fd0", "Electric Purple": "#a966cd", "Emerald": "#59af75", "English Violet": "#986aa2", "Fandango": "#c26ea0", "Feldgrau": "#707c73", "Fire Engine": "#d84749", "French Blue": "#4581ab", "French Violet": "#a955df", "Grape": "#885cad", "Gunmetal": "#3d4b52", "Gunship Green": "#477459", "Hunter Green": "#689666", "Indigo Dye": "#496b83", "Ivory White": "#acaba5", "Carmine": "#c64640", "Carrot Juice": "#d18559", "Celtic Blue": "#399ce1", "Chestnut": "#a85943", "Chocolate": "#865344", "Cobalt Blue": "#5771bf", "Copper": "#ba7844", "Coral Red": "#ce725a", "Cyberpunk": "#8673e3", "Dark Green": "#3a5236", "Dark Lilac": "#9e688f", "Deep Cyan": "#23a4a1", "Desert Sand": "#928268", "Electric Indigo": "#786ee4", "Black": "#1b1b1b", "Amber": "#c19332", "Aquamarine": "#4fada4", "Azure Blue": "#4b99b5", "Battleship Grey": "#797a73", "Burgundy": "#824a54", "Burnt Sienna": "#c35831", "Camo Green": "#607d45", "Cappuccino": "#937667", "Caramel": "#c38530"
     };
 
-    // ----- ТВОИ ПОДАРКИ (ОБНОВЛЁННЫЕ) -----
+    // ----- ТВОИ ПОДАРКИ -----
     const originalGifts = [
         { id: 1, name: "Vice Cream", price: 465, bg: "Fandango", link: "https://t.me/nft/ViceCream-347944", imageUrl: "https://i.ibb.co/Mkv383Q6/IMG-20260425-122848-677.jpg" },
-        { id: 2, name: "Mood Pack", price: 838, bg: "Shamrock Green", link: "https://t.me/nft/MoodPack-7495", imageUrl: "https://i.ibb.co/ZpQJQ1HZ/IMG-20260427-235518-214.jpg" },
+        { id: 2, name: "Lunar Snake", price: 538, bg: "Strawberry", link: "https://t.me/nft/LunarSnake-78190", imageUrl: "https://i.ibb.co/sdkwSFrj/IMG-20260427-223151-388.jpg" },
         { id: 3, name: "Happy Brownie", price: 630, bg: "Tomato", link: "https://t.me/nft/HappyBrownie-174834", imageUrl: "https://i.ibb.co/vxpnrYK4/IMG-20260425-160241-272.jpg" },
         { id: 4, name: "Jingle Bells", price: 1290, bg: "Aquamarine", link: "http://t.me/nft/JingleBells-28899", imageUrl: "https://i.ibb.co/h1YNmH8k/IMG-20260425-183559-003.jpg" },
         { id: 5, name: "Chill Flame", price: 683, bg: "Satin Gold", link: "https://t.me/nft/ChillFlame-197348", imageUrl: "https://i.ibb.co/Vpw6Cd7x/IMG-20260425-171429-926.jpg" },
@@ -502,12 +517,11 @@
             card.appendChild(nameDiv);
             card.appendChild(priceDiv);
             
-            // ПРОСТОЕ НАЖАТИЕ (не зажатие)
             card.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const rect = card.getBoundingClientRect();
+                const rect = imgWrapper.getBoundingClientRect();
                 const x = rect.left + rect.width / 2;
-                const y = rect.top + rect.height / 2;
+                const y = rect.bottom + 5;
                 showActionPopup(x, y, gift);
             });
             
@@ -521,8 +535,9 @@
 
     function showActionPopup(x, y, gift) {
         activeGift = gift;
-        popup.style.left = (x - 110) + 'px';
-        popup.style.top = (y - 90) + 'px';
+        popup.style.display = 'flex';
+        popup.style.left = (x - 100) + 'px';
+        popup.style.top = y + 'px';
         popup.classList.add('show');
         
         setTimeout(() => {
@@ -533,19 +548,17 @@
 
     function closePopupOnOutside(e) {
         if (!popup.contains(e.target)) {
-            popup.classList.remove('show');
-            document.removeEventListener('click', closePopupOnOutside);
-            document.removeEventListener('touchstart', closePopupOnOutside);
+            hidePopup();
         }
     }
 
     function hidePopup() {
         popup.classList.remove('show');
+        popup.style.display = 'none';
         document.removeEventListener('click', closePopupOnOutside);
         document.removeEventListener('touchstart', closePopupOnOutside);
     }
 
-    // Написать владельцу
     actionMessageBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         if (!activeGift) return;
@@ -554,7 +567,6 @@
         hidePopup();
     });
 
-    // Посмотреть подарок
     actionViewBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         if (!activeGift) return;
@@ -562,7 +574,6 @@
         hidePopup();
     });
 
-    // Фильтрация по фонам
     function applyBackgroundFilter() {
         if (!currentBgFilter || currentBgFilter.length === 0) {
             currentGifts = [...originalGifts];
@@ -572,7 +583,6 @@
         renderGrid(currentGifts);
     }
 
-    // Логика модального окна фонов
     const modal = document.getElementById('bgModal');
     const openBgBtn = document.getElementById('openBgFilterBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -604,8 +614,7 @@
             const div = document.createElement('div');
             div.className = 'bg-item';
             const color = bgColorMap[bg] || "#888888";
-            // Кружок больше, без белой рамки
-            div.innerHTML = `<div class="color-circle" style="background: ${color}; width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;"></div><span class="bg-name">${bg}</span><div class="bg-checkbox ${selectedBackgrounds.includes(bg) ? 'checked' : ''}"></div>`;
+            div.innerHTML = `<div class="color-circle" style="background: ${color};"></div><span class="bg-name">${bg}</span><div class="bg-checkbox ${selectedBackgrounds.includes(bg) ? 'checked' : ''}"></div>`;
             div.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const checkbox = div.querySelector('.bg-checkbox');
@@ -657,7 +666,6 @@
     });
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
 
-    // Сортировка и фильтры
     function sortByPriceAsc() { currentGifts.sort((a, b) => a.price - b.price); renderGrid(currentGifts); }
     function sortByPriceDesc() { currentGifts.sort((a, b) => b.price - a.price); renderGrid(currentGifts); }
     function filterByPrice(minPrice, maxPrice) { 
@@ -712,6 +720,7 @@
 </script>
 </body>
 </html>
+    
     
     
 
