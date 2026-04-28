@@ -462,7 +462,6 @@
         { id: 8, name: "Victory Medal", price: 8100, bg: "Black", link: "https://t.me/nft/VictoryMedal-12550", imageUrl: "https://i.ibb.co/SDcM2FmR/IMG-20260425-185100-731.jpg" },
         { id: 9, name: "Restless Jar", price: 4650, bg: "Black", link: "https://t.me/nft/RestlessJar-43217", imageUrl: "https://i.ibb.co/xSGNT2CG/IMG-20260425-185541-193.jpg" },
         { id: 10, name: "Whip Cupcake", price: 4080, bg: "Black", link: "https://t.me/nft/WhipCupcake-154178", imageUrl: "https://i.ibb.co/3m65Cy6d/IMG-20260426-004707-125.jpg" },
-        { id: 11, name: "Whip Cupcake", price: 3840, bg: "Black", link: "https://t.me/nft/WhipCupcake-87993", imageUrl: "https://i.ibb.co/9mShH8V7/IMG-20260426-115743-807.jpg" },
         { id: 13, name: "Mood Pack", price: 1108, bg: "Electric Indigo", link: "https://t.me/nft/MoodPack-152015", imageUrl: "https://i.ibb.co/KzFSpBbQ/IMG-20260426-124131-554.jpg" },
         { id: 14, name: "Xmas Stocking", price: 5100, bg: "Black", link: "https://t.me/nft/XmasStocking-4460", imageUrl: "https://i.ibb.co/1fT9Z09B/IMG-20260426-151043-813.jpg" }
     ];
@@ -471,7 +470,6 @@
     let selectedBackgrounds = [];
     let currentBgFilter = null;
     let activeGift = null;
-    let longPressTimer = null;
 
     function renderGrid(data) {
         const container = document.getElementById('nftGrid');
@@ -504,27 +502,13 @@
             card.appendChild(nameDiv);
             card.appendChild(priceDiv);
             
-            // Исправленные обработчики — без лишних preventDefault
-            card.addEventListener('touchstart', (e) => {
-                // Не вызываем preventDefault, чтобы не ломать скролл
-                longPressTimer = setTimeout(() => {
-                    const rect = card.getBoundingClientRect();
-                    const x = rect.left + rect.width / 2;
-                    const y = rect.top + rect.height / 2;
-                    showActionPopup(x, y, gift);
-                }, 500);
-            });
-            card.addEventListener('touchend', () => {
-                if (longPressTimer) {
-                    clearTimeout(longPressTimer);
-                    longPressTimer = null;
-                }
-            });
-            card.addEventListener('touchmove', () => {
-                if (longPressTimer) {
-                    clearTimeout(longPressTimer);
-                    longPressTimer = null;
-                }
+            // ПРОСТОЕ НАЖАТИЕ (не зажатие)
+            card.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const rect = card.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.top + rect.height / 2;
+                showActionPopup(x, y, gift);
             });
             
             container.appendChild(card);
@@ -537,11 +521,12 @@
 
     function showActionPopup(x, y, gift) {
         activeGift = gift;
-        popup.style.left = (x - 100) + 'px';
-        popup.style.top = (y - 70) + 'px';
+        popup.style.left = (x - 110) + 'px';
+        popup.style.top = (y - 90) + 'px';
         popup.classList.add('show');
         
         setTimeout(() => {
+            document.addEventListener('click', closePopupOnOutside);
             document.addEventListener('touchstart', closePopupOnOutside);
         }, 10);
     }
@@ -549,28 +534,35 @@
     function closePopupOnOutside(e) {
         if (!popup.contains(e.target)) {
             popup.classList.remove('show');
+            document.removeEventListener('click', closePopupOnOutside);
             document.removeEventListener('touchstart', closePopupOnOutside);
         }
     }
 
     function hidePopup() {
         popup.classList.remove('show');
+        document.removeEventListener('click', closePopupOnOutside);
         document.removeEventListener('touchstart', closePopupOnOutside);
     }
 
-    actionMessageBtn.addEventListener('click', () => {
+    // Написать владельцу
+    actionMessageBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         if (!activeGift) return;
         const text = `Привет, хотел бы приобрести этот подарок ${activeGift.link}, ${activeGift.price}₽`;
         window.open(`https://t.me/CAIIIOK_gomeon?text=${encodeURIComponent(text)}`, '_blank');
         hidePopup();
     });
 
-    actionViewBtn.addEventListener('click', () => {
+    // Посмотреть подарок
+    actionViewBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         if (!activeGift) return;
         window.open(activeGift.link, '_blank');
         hidePopup();
     });
 
+    // Фильтрация по фонам
     function applyBackgroundFilter() {
         if (!currentBgFilter || currentBgFilter.length === 0) {
             currentGifts = [...originalGifts];
@@ -580,6 +572,7 @@
         renderGrid(currentGifts);
     }
 
+    // Логика модального окна фонов
     const modal = document.getElementById('bgModal');
     const openBgBtn = document.getElementById('openBgFilterBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -611,7 +604,8 @@
             const div = document.createElement('div');
             div.className = 'bg-item';
             const color = bgColorMap[bg] || "#888888";
-            div.innerHTML = `<div class="color-circle" style="background: ${color};"></div><span class="bg-name">${bg}</span><div class="bg-checkbox ${selectedBackgrounds.includes(bg) ? 'checked' : ''}"></div>`;
+            // Кружок больше, без белой рамки
+            div.innerHTML = `<div class="color-circle" style="background: ${color}; width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;"></div><span class="bg-name">${bg}</span><div class="bg-checkbox ${selectedBackgrounds.includes(bg) ? 'checked' : ''}"></div>`;
             div.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const checkbox = div.querySelector('.bg-checkbox');
@@ -663,6 +657,7 @@
     });
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
 
+    // Сортировка и фильтры
     function sortByPriceAsc() { currentGifts.sort((a, b) => a.price - b.price); renderGrid(currentGifts); }
     function sortByPriceDesc() { currentGifts.sort((a, b) => b.price - a.price); renderGrid(currentGifts); }
     function filterByPrice(minPrice, maxPrice) { 
@@ -717,6 +712,7 @@
 </script>
 </body>
 </html>
+    
     
 
     
