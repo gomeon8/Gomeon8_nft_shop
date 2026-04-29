@@ -489,6 +489,7 @@
     let currentBgFilter = null;
     let activeGift = null;
     let isPopupVisible = false;
+    let ignoreNextClick = false;
 
     function renderGrid(data) {
         const container = document.getElementById('nftGrid');
@@ -524,9 +525,16 @@
             card.addEventListener('click', (e) => {
                 e.stopPropagation();
                 
-                // Если плашка видна — просто закрываем её и ВСЁ
+                // Если игнорируем клик — пропускаем
+                if (ignoreNextClick) {
+                    ignoreNextClick = false;
+                    return;
+                }
+                
+                // Если плашка видна — закрываем её и ничего больше не делаем
                 if (isPopupVisible) {
                     hidePopup();
+                    ignoreNextClick = true;
                     return;
                 }
                 
@@ -562,7 +570,6 @@
     }
 
     function closePopupOnOutside(e) {
-        // Если клик по кнопкам внутри плашки — не закрываем
         if (popup.contains(e.target)) {
             return;
         }
@@ -739,5 +746,4 @@
 </script>
 </body>
 </html>
-    
-        
+             
