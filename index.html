@@ -19,15 +19,39 @@
             max-width: 900px;
             margin: 0 auto;
         }
-        .gift-card { text-align: center; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-        .image-wrapper { background: #ffffff; border-radius: 24px; padding: 8px; margin-bottom: 12px; position: relative; }
-        .gift-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 20px; display: block; pointer-events: none; }
-        .gift-name { 
-            font-weight: 600; 
-            font-size: 15px; 
+        .gift-card {
+            text-align: center;
+            cursor: default;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .image-wrapper {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 8px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .gift-img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 20px;
+            display: block;
+            pointer-events: none;
+        }
+        .gift-name {
+            font-weight: 600;
+            font-size: 15px;
             margin-bottom: 6px;
             letter-spacing: 0.3px;
             pointer-events: none;
+        }
+        .price-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
         .gift-price {
             font-size: 16px;
@@ -39,8 +63,39 @@
             letter-spacing: 0.3px;
             pointer-events: none;
         }
-        .gift-price::before { content: "₽ "; }
-        .footer-note { text-align: center; margin-top: 40px; font-size: 13px; color: #aaa; border-top: 1px solid #222; padding-top: 24px; }
+        .gift-price::before {
+            content: "₽ ";
+        }
+        /* Круглая кнопка Telegram справа от цены */
+        .tg-btn {
+            width: 32px;
+            height: 32px;
+            background-color: #4a4a4d;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.1s;
+            flex-shrink: 0;
+        }
+        .tg-btn:active {
+            background-color: #3a3a3c;
+        }
+        .tg-btn img {
+            width: 20px;
+            height: 20px;
+            display: block;
+            pointer-events: none;
+        }
+        .footer-note {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 13px;
+            color: #aaa;
+            border-top: 1px solid #222;
+            padding-top: 24px;
+        }
 
         .fab {
             position: fixed;
@@ -356,7 +411,6 @@
             opacity: 1;
             visibility: visible;
         }
-        /* Стрелочка-треугольник сверху */
         .action-popup::before {
             content: '';
             position: absolute;
@@ -391,6 +445,8 @@
         @media (max-width: 560px) {
             .gift-name { font-size: 13px; }
             .gift-price { font-size: 14px; }
+            .tg-btn { width: 28px; height: 28px; }
+            .tg-btn img { width: 16px; height: 16px; }
             .fab { width: 48px; height: 48px; bottom: 16px; left: 16px; }
             .sort-menu { bottom: 74px; left: 16px; min-width: 240px; }
             .sort-menu button { font-size: 14px; padding: 10px 16px; }
@@ -398,14 +454,13 @@
             .apply-btn { padding: 8px 16px; font-size: 14px; min-width: 95px; }
             .bg-name { font-size: 13px; }
             .action-btn { padding: 8px 16px; font-size: 13px; }
-            .color-circle { width: 36px; height: 36px; }
         }
     </style>
 </head>
 <body>
 
 <div class="grid" id="nftGrid"></div>
-<div class="footer-note">🔥 Нажми на подарок → появятся действия</div>
+<div class="footer-note">🔥 Нажми на кнопку Telegram → появятся действия</div>
 
 <div class="fab" id="sortFab">
     <div><span></span><span></span><span></span></div>
@@ -489,7 +544,6 @@
     let currentBgFilter = null;
     let activeGift = null;
     let isPopupVisible = false;
-    let ignoreNextClick = false;
 
     function renderGrid(data) {
         const container = document.getElementById('nftGrid');
@@ -502,50 +556,39 @@
             
             const imgWrapper = document.createElement('div');
             imgWrapper.className = 'image-wrapper';
-            
             const img = document.createElement('img');
             img.className = 'gift-img';
             img.src = gift.imageUrl;
             img.alt = gift.name;
-            
             imgWrapper.appendChild(img);
             card.appendChild(imgWrapper);
             
             const nameDiv = document.createElement('div');
             nameDiv.className = 'gift-name';
             nameDiv.innerText = gift.name;
+            card.appendChild(nameDiv);
+            
+            // Цена и кнопка Telegram
+            const priceWrapper = document.createElement('div');
+            priceWrapper.className = 'price-wrapper';
             
             const priceDiv = document.createElement('div');
             priceDiv.className = 'gift-price';
             priceDiv.innerText = gift.price;
+            priceWrapper.appendChild(priceDiv);
             
-            card.appendChild(nameDiv);
-            card.appendChild(priceDiv);
-            
-            card.addEventListener('click', (e) => {
+            const tgBtn = document.createElement('div');
+            tgBtn.className = 'tg-btn';
+            tgBtn.innerHTML = `<img src="https://i.ibb.co/6RTwybJx/123-20260430213721.png" alt="TG">`;
+            tgBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                
-                // Если игнорируем клик — пропускаем
-                if (ignoreNextClick) {
-                    ignoreNextClick = false;
-                    return;
-                }
-                
-                // Если плашка видна — закрываем её и ничего больше не делаем
-                if (isPopupVisible) {
-                    hidePopup();
-                    ignoreNextClick = true;
-                    return;
-                }
-                
-                // Если плашка не видна — открываем новую
-                if (!isPopupVisible) {
-                    const rect = imgWrapper.getBoundingClientRect();
-                    const x = rect.left + rect.width / 2;
-                    const y = rect.bottom + 5;
-                    showActionPopup(x, y, gift);
-                }
+                const rect = imgWrapper.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.bottom + 5;
+                showActionPopup(x, y, gift);
             });
+            priceWrapper.appendChild(tgBtn);
+            card.appendChild(priceWrapper);
             
             container.appendChild(card);
         });
@@ -746,4 +789,5 @@
 </script>
 </body>
 </html>
+    
              
