@@ -239,6 +239,7 @@
             font-weight: 500;
         }
 
+        /* Модальное окно фонов (без изменений) */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -402,6 +403,8 @@
             font-family: inherit;
         }
         .clear-btn:active, .show-btn:active { opacity: 0.8; }
+        
+        /* Плашка с действиями (подарок) */
         .action-popup {
             position: fixed;
             background-color: #2c2c2e;
@@ -452,6 +455,81 @@
             background: #4a4a4d;
         }
 
+        /* НОВАЯ ПЛАШКА ДЛЯ ЗАДАНИЙ */
+        .tasks-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+        .tasks-modal.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        .tasks-content {
+            background-color: #2c2c2e;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .tasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #3a3a3c;
+        }
+        .tasks-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .close-tasks {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        .close-tasks:active {
+            background-color: #3a3a3c;
+        }
+        .tasks-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #ccc;
+        }
+        .tasks-text strong {
+            color: white;
+            font-weight: 700;
+            display: block;
+            margin-top: 12px;
+            margin-bottom: 6px;
+        }
+        .tasks-text strong:first-of-type {
+            margin-top: 0;
+        }
+
         @media (max-width: 560px) {
             .gift-name { font-size: 13px; }
             .gift-price { font-size: 14px; }
@@ -464,6 +542,7 @@
             .apply-btn { padding: 8px 16px; font-size: 14px; min-width: 95px; }
             .bg-name { font-size: 13px; }
             .action-btn { padding: 8px 16px; font-size: 13px; }
+            .tasks-content { padding: 16px; }
         }
     </style>
 </head>
@@ -477,6 +556,8 @@
 </div>
 
 <div class="sort-menu" id="sortMenu">
+    <button id="openTasksBtn">📋 Задания</button>
+    <hr>
     <button id="openBgFilterBtn"> Выбрать фон</button>
     <hr>
     <button id="sortAsc"> Цена по возрастанию</button>
@@ -493,7 +574,7 @@
         </div>
     </div>
     <hr>
-    <button id="sortReset">🔄 Сбросить</button>
+    <button id="sortReset"> Сбросить</button>
 </div>
 
 <div class="modal-overlay" id="bgModal">
@@ -521,6 +602,29 @@
     <button id="actionMessageBtn" class="action-btn"> Написать владельцу</button>
     <button id="actionViewBtn" class="action-btn"> Посмотреть подарок</button>
 </div>
+
+<!-- Плашка заданий -->
+<div id="tasksModal" class="tasks-modal">
+    <div class="tasks-content">
+        <div class="tasks-header">
+            <h3> Задания</h3>
+            <button class="close-tasks" id="closeTasksBtn">✕</button>
+        </div>
+        <div class="tasks-text">
+            <strong>Реферальная программа.</strong>
+            За каждого нового приведенного вами человека 
+            - Я буду дарить вам подарок за 15 звёзд.
+            
+            <strong>Условия:</strong>
+            1. Осведомить меня, что человек пришёл от вас.<br>
+            2. Необходимо, чтобы человек сделал абсолютно любую покупку.
+            
+            <strong>Бонусы, которые вы можете получить:</strong>
+            1. Каждый новый приведенный человек - подарок за 15 звёзд.<br>
+            2. За каждых 5 новых приведенных людей - скидка 10% на любой подарок до 5000 ₽.
+        </div>
+    </div>
+</div>
     <script>
     // ----- СПИСОК ФОНОВ -----
     const backgroundsList = [
@@ -531,7 +635,7 @@
         "Rifle Green": "#434b40", "Roman Silver": "#838996", "Rosewood": "#9a6163", "Sapphire": "#558bc3", "Satin Gold": "#aa8c41", "Seal Brown": "#533e36", "Shamrock Green": "#71a253", "Silver Blue": "#8a9aad", "Sky Blue": "#549ec6", "Steel Grey": "#71797e", "Strawberry": "#cb7667", "Tactical Pine": "#366e69", "Tomato": "#de643f", "Turquoise": "#4ca9a4", "Neon Blue": "#6b79ea", "Old Gold": "#a47a2e", "Onyx Black": "#353839", "Orange": "#c8803f", "Pacific Cyan": "#4baab0", "Pacific Green": "#56b08c", "Persimmon": "#d3845b", "Pine Green": "#518c72", "Pistachio": "#71965e", "Platinum": "#9c9892", "Pure Gold": "#ad8f37", "Purple": "#965795", "Ranger Green": "#ab6041", "Raspberry": "#c8677f", "Jade Green": "#47ac88", "Khaki Green": "#86915e", "Lavender": "#9e6fce", "Lemongrass": "#77a14a", "Light Olive": "#a39753", "Malachite": "#63a455", "Marine Blue": "#405788", "Mexican Pink": "#d45384", "Midnight Blue": "#414e69", "Mint Green": "#62b46d", "Moonstone": "#65969f", "Mustard": "#cb850d", "Mystic Pearl": "#bd696e", "Navy Blue": "#617fd0", "Electric Purple": "#a966cd", "Emerald": "#59af75", "English Violet": "#986aa2", "Fandango": "#c26ea0", "Feldgrau": "#707c73", "Fire Engine": "#d84749", "French Blue": "#4581ab", "French Violet": "#a955df", "Grape": "#885cad", "Gunmetal": "#3d4b52", "Gunship Green": "#477459", "Hunter Green": "#689666", "Indigo Dye": "#496b83", "Ivory White": "#acaba5", "Carmine": "#c64640", "Carrot Juice": "#d18559", "Celtic Blue": "#399ce1", "Chestnut": "#a85943", "Chocolate": "#865344", "Cobalt Blue": "#5771bf", "Copper": "#ba7844", "Coral Red": "#ce725a", "Cyberpunk": "#8673e3", "Dark Green": "#3a5236", "Dark Lilac": "#9e688f", "Deep Cyan": "#23a4a1", "Desert Sand": "#928268", "Electric Indigo": "#786ee4", "Black": "#1b1b1b", "Amber": "#c19332", "Aquamarine": "#4fada4", "Azure Blue": "#4b99b5", "Battleship Grey": "#797a73", "Burgundy": "#824a54", "Burnt Sienna": "#c35831", "Camo Green": "#607d45", "Cappuccino": "#937667", "Caramel": "#c38530"
     };
 
-    // ----- ТВОИ ПОДАРКИ (14 ШТУК) -----
+    // ----- ТВОИ ПОДАРКИ (19 ШТУК) -----
     const originalGifts = [
         { id: 2, name: "Mood Pack", price: 838, bg: "Shamrock Green", link: "https://t.me/nft/MoodPack-7495", imageUrl: "https://i.ibb.co/ZpQJQ1HZ/IMG-20260427-235518-214.jpg" },
         { id: 3, name: "Happy Brownie", price: 630, bg: "Tomato", link: "https://t.me/nft/HappyBrownie-174834", imageUrl: "https://i.ibb.co/vxpnrYK4/IMG-20260425-160241-272.jpg" },
@@ -549,9 +653,6 @@
         { id: 19, name: "Westside Sign", price: 11888, bg: "Lemongrass", link: "https://t.me/nft/WestsideSign-4918", imageUrl: "https://i.ibb.co/qMCVC052/IMG-20260430-224518-098.jpg" },
         { id: 20, name: "Fresh Socks", price: 748, bg: "Mustard", link: "https://t.me/nft/FreshSocks-114700", imageUrl: "https://i.ibb.co/nskKwxjd/IMG-20260430-224520-037.jpg" },
         { id: 21, name: "Lunar Snake", price: 552, bg: "Electric Indigo", link: "https://t.me/nft/LunarSnake-43494", imageUrl: "https://i.ibb.co/8g1FZxfB/IMG-20260430-224739-752.jpg" }
-        
-        
-        
     ];
 
     let currentGifts = [...originalGifts];
@@ -560,6 +661,7 @@
     let activeGift = null;
     let isPopupVisible = false;
 
+    // ----- ОТРИСОВКА СЕТКИ (без изменений) -----
     function renderGrid(data) {
         const container = document.getElementById('nftGrid');
         if (!container) return;
@@ -583,10 +685,8 @@
             nameDiv.innerText = gift.name;
             card.appendChild(nameDiv);
             
-            // Цена и кнопка Telegram
             const priceWrapper = document.createElement('div');
             priceWrapper.className = 'price-wrapper';
-            
             const priceDiv = document.createElement('div');
             priceDiv.className = 'gift-price';
             priceDiv.innerText = gift.price;
@@ -594,7 +694,7 @@
             
             const tgBtn = document.createElement('div');
             tgBtn.className = 'tg-btn';
-            tgBtn.innerHTML = `<img src="https://static.vecteezy.com/system/resources/previews/049/694/893/large_2x/telegram-3d-illustration-free-png.png" alt="TG">`;
+            tgBtn.innerHTML = `<img src="https://i.ibb.co/6RTwybJx/123-20260430213721.png" alt="TG">`;
             tgBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const rect = imgWrapper.getBoundingClientRect();
@@ -604,11 +704,11 @@
             });
             priceWrapper.appendChild(tgBtn);
             card.appendChild(priceWrapper);
-            
             container.appendChild(card);
         });
     }
 
+    // ----- ПЛАШКА ДЕЙСТВИЙ (подарок) -----
     const popup = document.getElementById('actionPopup');
     const actionMessageBtn = document.getElementById('actionMessageBtn');
     const actionViewBtn = document.getElementById('actionViewBtn');
@@ -658,6 +758,36 @@
         hidePopup();
     });
 
+    // ----- НОВАЯ ЛОГИКА ДЛЯ ПЛАШКИ ЗАДАНИЙ -----
+    const tasksModal = document.getElementById('tasksModal');
+    const openTasksBtn = document.getElementById('openTasksBtn');
+    const closeTasksBtn = document.getElementById('closeTasksBtn');
+
+    function openTasksModal() {
+        tasksModal.classList.add('show');
+    }
+
+    function closeTasksModal() {
+        tasksModal.classList.remove('show');
+    }
+
+    openTasksBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openTasksModal();
+    });
+
+    closeTasksBtn.addEventListener('click', () => {
+        closeTasksModal();
+    });
+
+    // Закрытие по клику на фон (вне белого окна)
+    tasksModal.addEventListener('click', (e) => {
+        if (e.target === tasksModal) {
+            closeTasksModal();
+        }
+    });
+
+    // ----- ФИЛЬТРЫ, СОРТИРОВКА, МОДАЛКА ФОНОВ (БЕЗ ИЗМЕНЕНИЙ) -----
     function applyBackgroundFilter() {
         if (!currentBgFilter || currentBgFilter.length === 0) {
             currentGifts = [...originalGifts];
@@ -804,5 +934,6 @@
 </script>
 </body>
 </html>
+    
     
              
