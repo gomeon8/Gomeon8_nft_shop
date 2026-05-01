@@ -7,33 +7,14 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* ПЛАВНЫЙ ПЕРЕЛИВАЮЩИЙСЯ ФОН (ЧЁРНЫЙ + ФИОЛЕТОВЫЙ) */
+        /* ГЛУБОКИЙ ФИОЛЕТОВЫЙ ФОН С ЗАТЕМНЁННЫМИ УГЛАМИ (БЕЗ АНИМАЦИИ) */
         body {
+            background: radial-gradient(circle at 30% 20%, #6a1b9a, #2a004a 70%, #0a001a);
+            background-attachment: fixed;
             font-family: 'Segoe UI', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
             padding: 20px 16px 80px 16px;
             color: white;
             min-height: 100vh;
-            
-            /* Базовый градиент с затемнёнными углами */
-            background: radial-gradient(circle at 30% 20%, #4a0e6b, #1a0033 70%, #000000);
-            background-attachment: fixed;
-            animation: softBreathing 12s ease-in-out infinite;
-        }
-        
-        /* Очень плавное «дыхание» — меняется центр градиента и насыщенность */
-        @keyframes softBreathing {
-            0% {
-                background: radial-gradient(circle at 30% 20%, #4a0e6b, #1a0033 70%, #000000);
-                background-attachment: fixed;
-            }
-            50% {
-                background: radial-gradient(circle at 70% 80%, #8700FF, #2a004a 70%, #000000);
-                background-attachment: fixed;
-            }
-            100% {
-                background: radial-gradient(circle at 30% 20%, #4a0e6b, #1a0033 70%, #000000);
-                background-attachment: fixed;
-            }
         }
         
         .grid {
