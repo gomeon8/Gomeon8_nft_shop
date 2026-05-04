@@ -7,7 +7,6 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* ГЛУБОКИЙ ФИОЛЕТОВЫЙ ФОН С ЗАТЕМНЕНИЕМ СПРАВА И СНИЗУ */
         body {
             background: radial-gradient(ellipse at 30% 30%, #8a2be2, #4a0e6b 70%, #1a0033);
             background-attachment: fixed;
@@ -108,6 +107,7 @@
             padding-top: 24px;
         }
 
+        /* Левая нижняя кнопка (три полоски) — больше */
         .fab {
             position: fixed;
             bottom: 20px;
@@ -134,6 +134,33 @@
             margin: 5px 0;
             border-radius: 2px;
         }
+
+        /* КНОПКА "i" — МЕНЬШЕ, ЧЕМ КНОПКА ТРИ ПОЛОСКИ */
+        .info-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 32px;
+            height: 32px;
+            background-color: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: background 0.2s;
+            z-index: 1000;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-weight: bold;
+            font-size: 18px;
+            color: white;
+        }
+        .info-btn:active {
+            background-color: rgba(0,0,0,0.6);
+        }
+
         .sort-menu {
             position: fixed;
             bottom: 80px;
@@ -239,7 +266,6 @@
             font-weight: 500;
         }
 
-        /* Модальное окно фонов (без изменений) */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -404,7 +430,6 @@
         }
         .clear-btn:active, .show-btn:active { opacity: 0.8; }
         
-        /* Плашка с действиями (подарок) */
         .action-popup {
             position: fixed;
             background-color: #2c2c2e;
@@ -455,7 +480,6 @@
             background: #4a4a4d;
         }
 
-        /* НОВАЯ ПЛАШКА ДЛЯ ЗАДАНИЙ */
         .tasks-modal {
             position: fixed;
             top: 0;
@@ -536,6 +560,7 @@
             .tg-btn { width: 28px; height: 28px; }
             .tg-btn img { width: 16px; height: 16px; }
             .fab { width: 48px; height: 48px; bottom: 16px; left: 16px; }
+            .info-btn { width: 28px; height: 28px; top: 16px; right: 16px; font-size: 16px; }
             .sort-menu { bottom: 74px; left: 16px; min-width: 240px; }
             .sort-menu button { font-size: 14px; padding: 10px 16px; }
             .price-inputs input { width: 75px; padding: 8px 8px; font-size: 14px; }
@@ -555,9 +580,9 @@
     <div><span></span><span></span><span></span></div>
 </div>
 
+<div class="info-btn" id="infoBtn">i</div>
+
 <div class="sort-menu" id="sortMenu">
-    <button id="openTasksBtn"> Задания</button>
-    <hr>
     <button id="openBgFilterBtn"> Выбрать фон</button>
     <hr>
     <button id="sortAsc"> Цена по возрастанию</button>
@@ -603,11 +628,10 @@
     <button id="actionViewBtn" class="action-btn"> Посмотреть подарок</button>
 </div>
 
-<!-- Плашка заданий -->
 <div id="tasksModal" class="tasks-modal">
     <div class="tasks-content">
         <div class="tasks-header">
-            <h3> Задания</h3>
+            <h3>Информация</h3>
             <button class="close-tasks" id="closeTasksBtn">✕</button>
         </div>
         <div class="tasks-text">
@@ -635,7 +659,7 @@
         "Rifle Green": "#434b40", "Roman Silver": "#838996", "Rosewood": "#9a6163", "Sapphire": "#558bc3", "Satin Gold": "#aa8c41", "Seal Brown": "#533e36", "Shamrock Green": "#71a253", "Silver Blue": "#8a9aad", "Sky Blue": "#549ec6", "Steel Grey": "#71797e", "Strawberry": "#cb7667", "Tactical Pine": "#366e69", "Tomato": "#de643f", "Turquoise": "#4ca9a4", "Neon Blue": "#6b79ea", "Old Gold": "#a47a2e", "Onyx Black": "#353839", "Orange": "#c8803f", "Pacific Cyan": "#4baab0", "Pacific Green": "#56b08c", "Persimmon": "#d3845b", "Pine Green": "#518c72", "Pistachio": "#71965e", "Platinum": "#9c9892", "Pure Gold": "#ad8f37", "Purple": "#965795", "Ranger Green": "#ab6041", "Raspberry": "#c8677f", "Jade Green": "#47ac88", "Khaki Green": "#86915e", "Lavender": "#9e6fce", "Lemongrass": "#77a14a", "Light Olive": "#a39753", "Malachite": "#63a455", "Marine Blue": "#405788", "Mexican Pink": "#d45384", "Midnight Blue": "#414e69", "Mint Green": "#62b46d", "Moonstone": "#65969f", "Mustard": "#cb850d", "Mystic Pearl": "#bd696e", "Navy Blue": "#617fd0", "Electric Purple": "#a966cd", "Emerald": "#59af75", "English Violet": "#986aa2", "Fandango": "#c26ea0", "Feldgrau": "#707c73", "Fire Engine": "#d84749", "French Blue": "#4581ab", "French Violet": "#a955df", "Grape": "#885cad", "Gunmetal": "#3d4b52", "Gunship Green": "#477459", "Hunter Green": "#689666", "Indigo Dye": "#496b83", "Ivory White": "#acaba5", "Carmine": "#c64640", "Carrot Juice": "#d18559", "Celtic Blue": "#399ce1", "Chestnut": "#a85943", "Chocolate": "#865344", "Cobalt Blue": "#5771bf", "Copper": "#ba7844", "Coral Red": "#ce725a", "Cyberpunk": "#8673e3", "Dark Green": "#3a5236", "Dark Lilac": "#9e688f", "Deep Cyan": "#23a4a1", "Desert Sand": "#928268", "Electric Indigo": "#786ee4", "Black": "#1b1b1b", "Amber": "#c19332", "Aquamarine": "#4fada4", "Azure Blue": "#4b99b5", "Battleship Grey": "#797a73", "Burgundy": "#824a54", "Burnt Sienna": "#c35831", "Camo Green": "#607d45", "Cappuccino": "#937667", "Caramel": "#c38530"
     };
 
-    // ----- ТВОИ ПОДАРКИ (19 ШТУК) -----
+    // ----- ТВОИ ПОДАРКИ -----
     const originalGifts = [
         { id: 2, name: "Mood Pack", price: 838, bg: "Shamrock Green", link: "https://t.me/nft/MoodPack-7495", imageUrl: "https://i.ibb.co/ZpQJQ1HZ/IMG-20260427-235518-214.jpg" },
         { id: 3, name: "Happy Brownie", price: 630, bg: "Tomato", link: "https://t.me/nft/HappyBrownie-174834", imageUrl: "https://i.ibb.co/vxpnrYK4/IMG-20260425-160241-272.jpg" },
@@ -654,7 +678,6 @@
         { id: 20, name: "Fresh Socks", price: 748, bg: "Mustard", link: "https://t.me/nft/FreshSocks-114700", imageUrl: "https://i.ibb.co/nskKwxjd/IMG-20260430-224520-037.jpg" },
         { id: 21, name: "Lunar Snake", price: 552, bg: "Electric Indigo", link: "https://t.me/nft/LunarSnake-43494", imageUrl: "https://i.ibb.co/8g1FZxfB/IMG-20260430-224739-752.jpg" },
         { id: 22, name: "Lol Pop", price: 6090, bg: "Black", link: "https://t.me/nft/LolPop-105677", imageUrl: "https://i.ibb.co/twNVPShk/IMG-20260503-000329-664.jpg" }
-        
     ];
 
     let currentGifts = [...originalGifts];
@@ -663,7 +686,6 @@
     let activeGift = null;
     let isPopupVisible = false;
 
-    // ----- ОТРИСОВКА СЕТКИ (без изменений) -----
     function renderGrid(data) {
         const container = document.getElementById('nftGrid');
         if (!container) return;
@@ -696,7 +718,7 @@
             
             const tgBtn = document.createElement('div');
             tgBtn.className = 'tg-btn';
-            tgBtn.innerHTML = `<img src="https://static.vecteezy.com/system/resources/previews/049/694/893/large_2x/telegram-3d-illustration-free-png.png" alt="TG">`;
+            tgBtn.innerHTML = `<img src="https://i.ibb.co/6RTwybJx/123-20260430213721.png" alt="TG">`;
             tgBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const rect = imgWrapper.getBoundingClientRect();
@@ -710,7 +732,6 @@
         });
     }
 
-    // ----- ПЛАШКА ДЕЙСТВИЙ (подарок) -----
     const popup = document.getElementById('actionPopup');
     const actionMessageBtn = document.getElementById('actionMessageBtn');
     const actionViewBtn = document.getElementById('actionViewBtn');
@@ -730,9 +751,7 @@
     }
 
     function closePopupOnOutside(e) {
-        if (popup.contains(e.target)) {
-            return;
-        }
+        if (popup.contains(e.target)) return;
         hidePopup();
     }
 
@@ -760,9 +779,9 @@
         hidePopup();
     });
 
-    // ----- НОВАЯ ЛОГИКА ДЛЯ ПЛАШКИ ЗАДАНИЙ -----
+    // ----- ЛОГИКА ДЛЯ КНОПКИ "i" (ИНФОРМАЦИЯ) -----
     const tasksModal = document.getElementById('tasksModal');
-    const openTasksBtn = document.getElementById('openTasksBtn');
+    const infoBtn = document.getElementById('infoBtn');
     const closeTasksBtn = document.getElementById('closeTasksBtn');
 
     function openTasksModal() {
@@ -773,7 +792,7 @@
         tasksModal.classList.remove('show');
     }
 
-    openTasksBtn.addEventListener('click', (e) => {
+    infoBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         openTasksModal();
     });
@@ -782,14 +801,13 @@
         closeTasksModal();
     });
 
-    // Закрытие по клику на фон (вне белого окна)
     tasksModal.addEventListener('click', (e) => {
         if (e.target === tasksModal) {
             closeTasksModal();
         }
     });
 
-    // ----- ФИЛЬТРЫ, СОРТИРОВКА, МОДАЛКА ФОНОВ (БЕЗ ИЗМЕНЕНИЙ) -----
+    // ----- ФИЛЬТРЫ, СОРТИРОВКА, МОДАЛКА ФОНОВ -----
     function applyBackgroundFilter() {
         if (!currentBgFilter || currentBgFilter.length === 0) {
             currentGifts = [...originalGifts];
@@ -936,6 +954,5 @@
 </script>
 </body>
 </html>
-    
     
              
