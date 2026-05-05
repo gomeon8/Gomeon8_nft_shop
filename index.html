@@ -32,34 +32,38 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        .image-wrapper {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            border-radius: 24px;
-            padding: 8px;
-            margin-bottom: 12px;
-            position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-            transition: all 0.2s ease;
-            overflow: hidden;
-        }
-        
-        /* Блик-волна (работает только внутри рамки) */
+        /* ЯРКИЙ ВОЛНОВОЙ БЛИК ТОЛЬКО НА РАМКАХ */
+.image-wrapper {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 8px;
+    margin-bottom: 12px;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
         .image-wrapper::before {
             content: '';
             position: absolute;
             top: -100%;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.2) 100%);
+            left: -20%;
+            width: 140%;
+            height: 80px;
+            background: linear-gradient(90deg, 
+                                        rgba(255,255,255,0) 0%, 
+                                        rgba(255,255,255,0.9) 40%, 
+                                        rgba(255,255,255,0.9) 60%, 
+                                        rgba(255,255,255,0) 100%);
+            filter: blur(8px);
+            transform: rotate(-5deg);
             pointer-events: none;
-            z-index: 5;
+            z-index: 10;
             transition: top 0.05s linear;
-        
+            opacity: 0.9;
         }
-        
         .gift-img {
             width: 100%;
             aspect-ratio: 1 / 1;
@@ -671,91 +675,101 @@
     </div>
 </div>
     <script>
-    // ВОЛНА СВЕТА ТОЛЬКО НА РАМКАХ (ЯРКАЯ И ЗАМЕТНАЯ)
+    // ЯРКИЙ ВОЛНОВОЙ БЛИК НА РАМКАХ (как тот, что тебе нравился)
     (function() {
         const wrappers = document.querySelectorAll('.image-wrapper');
         if (!wrappers.length) return;
         
         let ticking = false;
+        let animationFrame = null;
         
         function updateWave() {
             const scrollTop = window.scrollY;
-            const waveHeight = 280; // высота волны света
-            const waveTop = scrollTop;
-            const waveBottom = waveTop + waveHeight;
+            const viewportHeight = window.innerHeight;
             
+            // Для каждой рамки вычисляем положение волны
             for (let wrapper of wrappers) {
                 const rect = wrapper.getBoundingClientRect();
-                const wrapperTop = rect.top + window.scrollY;
-                const wrapperBottom = wrapperTop + rect.height;
+                const wrapperTopAbs = rect.top + scrollTop;
+                const wrapperBottomAbs = wrapperTopAbs + rect.height;
                 
-                // Вычисляем перекрытие волны с рамкой (в пикселях)
+                // Волна движется со скроллом, но сдвинута относительно верха экрана
+                const wavePos = scrollTop + viewportHeight * 0.3; // волна на 30% ниже верхнего края экрана
+                const waveHeight = 80;
+                const waveTop = wavePos - waveHeight / 2;
+                const waveBottom = wavePos + waveHeight / 2;
+                
+                // Вычисляем, как волна пересекается с рамкой
                 let overlap = 0;
-                if (waveBottom > wrapperTop && waveTop < wrapperBottom) {
-                    const overlapStart = Math.max(waveTop, wrapperTop);
-                    const overlapEnd = Math.min(waveBottom, wrapperBottom);
-                    overlap = overlapEnd - overlapStart;
+                let offset = -100;
+                
+                if (waveBottom > wrapperTopAbs && waveTop < wrapperBottomAbs) {
+                    const overlapStart = Math.max(waveTop, wrapperTopAbs);
+                    const overlapEnd = Math.min(waveBottom, wrapperBottomAbs);
+                    overlap = (overlapEnd - overlapStart) / waveHeight;
+                    
+                    // Позиция волны относительно рамки
+                    offset = waveTop - wrapperTopAbs;
+                    offset = Math.min(rect.height, Math.max(-waveHeight, offset));
                 }
                 
-                // Яркость зависит от перекрытия: чем больше перекрытие, тем ярче
-                // Максимум 0.95 (почти белый), минимум 0
-                let intensity = overlap / rect.height;
+                // Яркость: если рамка перекрыта волной — ярко, если нет — совсем тускло
+                let intensity = overlap * 0.95;
                 intensity = Math.min(0.95, Math.max(0, intensity));
                 
-                // Позиция блика внутри рамки (сдвиг сверху)
-                let waveOffset = waveTop - wrapperTop;
-                waveOffset = Math.min(rect.height, Math.max(0, waveOffset));
-                
-                // Применяем стили напрямую к псевдоэлементу через CSS-переменные
-                wrapper.style.setProperty('--wave-intensity', intensity);
-                wrapper.style.setProperty('--wave-offset', waveOffset + 'px');
-                
-                // Добавляем inline-стиль для надёжности
-                wrapper.style.setProperty('--before-opacity', intensity);
-                wrapper.style.setProperty('--before-top', waveOffset + 'px');
+                // Применяем стиль
+                if (intensity > 0.05) {
+                    wrapper.style.setProperty('--wave-top', offset + 'px');
+                    wrapper.style.setProperty('--wave-opacity', intensity);
+                    wrapper.style.setProperty('--wave-display', 'block');
+                } else {
+                    wrapper.style.setProperty('--wave-top', '-100px');
+                    wrapper.style.setProperty('--wave-opacity', '0');
+                }
             }
             
-            // Применяем глобальные стили
-            let style = document.getElementById('wave-styles');
+            // Применяем через глобальный стиль (надёжно)
+            let style = document.getElementById('wave-glow');
             if (!style) {
                 style = document.createElement('style');
-                style.id = 'wave-styles';
+                style.id = 'wave-glow';
                 document.head.appendChild(style);
             }
             
-            // Генерируем CSS-правила для каждого wrapper (гарантированно работает)
-            let css = '';
+            let cssRules = '';
             for (let i = 0; i < wrappers.length; i++) {
                 const wrapper = wrappers[i];
-                const intensity = wrapper.style.getPropertyValue('--wave-intensity') || 0;
-                const waveOffset = wrapper.style.getPropertyValue('--wave-offset') || '0px';
-                css += `
+                const top = wrapper.style.getPropertyValue('--wave-top') || '-100px';
+                const opacity = wrapper.style.getPropertyValue('--wave-opacity') || '0';
+                cssRules += `
                     .image-wrapper:nth-child(${i+1})::before {
-                        opacity: ${intensity} !important;
-                        top: ${waveOffset} !important;
+                        top: ${top} !important;
+                        opacity: ${opacity} !important;
                     }
                 `;
             }
-            style.innerHTML = css;
+            style.innerHTML = cssRules;
             
             ticking = false;
         }
         
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    updateWave();
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        });
+        function handleScroll() {
+            if (animationFrame) cancelAnimationFrame(animationFrame);
+            animationFrame = requestAnimationFrame(() => {
+                updateWave();
+                animationFrame = null;
+            });
+        }
         
+        window.addEventListener('scroll', handleScroll);
         window.addEventListener('resize', () => updateWave());
         window.addEventListener('load', () => updateWave());
         updateWave();
     })();
     </script>
+    
+            
+            
     
             
         
