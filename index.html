@@ -43,33 +43,35 @@
         }
         
         .image-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            width: 60%;
-            height: 60%;
-            background: radial-gradient(circle at 0% 0%, rgba(255,255,255,0.8), rgba(255,255,255,0) 70%);
-            border-radius: 24px;
-            pointer-events: none;
-            opacity: 0.6;
-            transition: opacity 0.05s linear;
-            z-index: 2;
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(circle at 0% 0%, rgba(255,255,255,0.8), rgba(255,255,255,0) 70%);
+    border-radius: 24px;
+    pointer-events: none;
+    opacity: var(--top-opacity, 0.6);
+    transition: opacity 0.08s ease-out;
+    z-index: 2;
+        
         }
         
         .image-wrapper::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            right: -2px;
-            width: 50%;
-            height: 50%;
-            background: radial-gradient(circle at 100% 100%, rgba(255,200,255,0.5), rgba(255,200,255,0) 70%);
-            border-radius: 24px;
-            pointer-events: none;
-            opacity: 0.4;
-            transition: opacity 0.05s linear;
-            z-index: 2;
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 50%;
+    height: 50%;
+    background: radial-gradient(circle at 100% 100%, rgba(255,200,255,0.5), rgba(255,200,255,0) 70%);
+    border-radius: 24px;
+    pointer-events: none;
+    opacity: var(--bottom-opacity, 0.4);
+    transition: opacity 0.08s ease-out;
+    z-index: 2;
+        
         }
         
         .gift-img {
@@ -683,45 +685,48 @@
     </div>
 </div>
     <script>
-    // АНИМАЦИЯ БЛИКОВ ПРИ СКРОЛЛЕ
+    // АНИМАЦИЯ БЛИКОВ ПРИ СКРОЛЛЕ (ИСПРАВЛЕННАЯ)
     (function() {
-        const wrappers = document.querySelectorAll('.image-wrapper');
-        if (!wrappers.length) return;
-        
-        let ticking = false;
-        
         function updateHighlights() {
-            const scrollPercent = window.scrollY / (document.body.scrollHeight - window.innerHeight);
-            const t = Math.min(1, Math.max(0, scrollPercent));
+            const wrappers = document.querySelectorAll('.image-wrapper');
+            if (!wrappers.length) return;
             
-            const topLeftOpacity = 0.3 + t * 0.5;
-            const bottomRightOpacity = 0.6 - t * 0.5;
+            // Позиция скролла от 0 до 1
+            const scrollTop = window.scrollY;
+            const maxScroll = document.body.scrollHeight - window.innerHeight;
+            let percent = maxScroll > 0 ? scrollTop / maxScroll : 0;
+            percent = Math.min(1, Math.max(0, percent));
+            
+            // Верхний левый блик: при скролле вниз становится ярче
+            const topOpacity = 0.25 + percent * 0.55;
+            // Нижний правый блик: при скролле вниз становится темнее
+            const bottomOpacity = 0.55 - percent * 0.45;
             
             for (let wrapper of wrappers) {
-                wrapper.style.setProperty('--top-opacity', topLeftOpacity);
-                wrapper.style.setProperty('--bottom-opacity', bottomRightOpacity);
-                wrapper.style.setProperty('--top-opacity-ie', topLeftOpacity);
-                wrapper.style.setProperty('--bottom-opacity-ie', bottomRightOpacity);
+                wrapper.style.setProperty('--top-opacity', topOpacity);
+                wrapper.style.setProperty('--bottom-opacity', bottomOpacity);
             }
-            
-            ticking = false;
         }
         
+        // Запускаем при скролле (через requestAnimationFrame для плавности)
+        let ticking = false;
         window.addEventListener('scroll', () => {
             if (!ticking) {
-                requestAnimationFrame(updateHighlights);
+                requestAnimationFrame(() => {
+                    updateHighlights();
+                    ticking = false;
+                });
                 ticking = true;
             }
         });
         
-        updateHighlights();
-        
+        // Запускаем при изменении размера окна (пересчёт maxScroll)
         window.addEventListener('resize', () => {
-            if (!ticking) {
-                requestAnimationFrame(updateHighlights);
-                ticking = true;
-            }
+            updateHighlights();
         });
+        
+        // Один раз при загрузке
+        updateHighlights();
     })();
     </script>
     <script>
