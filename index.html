@@ -28,6 +28,7 @@
             cursor: default;
             -webkit-tap-highlight-color: transparent;
         }
+        
         .image-wrapper {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(12px);
@@ -38,7 +39,39 @@
             border: 1px solid rgba(255, 255, 255, 0.25);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
             transition: all 0.2s ease;
+            overflow: hidden;
         }
+        
+        .image-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle at 0% 0%, rgba(255,255,255,0.8), rgba(255,255,255,0) 70%);
+            border-radius: 24px;
+            pointer-events: none;
+            opacity: 0.6;
+            transition: opacity 0.05s linear;
+            z-index: 2;
+        }
+        
+        .image-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle at 100% 100%, rgba(255,200,255,0.5), rgba(255,200,255,0) 70%);
+            border-radius: 24px;
+            pointer-events: none;
+            opacity: 0.4;
+            transition: opacity 0.05s linear;
+            z-index: 2;
+        }
+        
         .gift-img {
             width: 100%;
             aspect-ratio: 1 / 1;
@@ -46,7 +79,10 @@
             border-radius: 20px;
             display: block;
             pointer-events: none;
+            position: relative;
+            z-index: 1;
         }
+        
         .gift-name {
             font-weight: 600;
             font-size: 15px;
@@ -107,7 +143,6 @@
             padding-top: 24px;
         }
 
-        /* Левая нижняя кнопка (три полоски) — больше */
         .fab {
             position: fixed;
             bottom: 20px;
@@ -135,7 +170,6 @@
             border-radius: 2px;
         }
 
-        /* КНОПКА "i" — МЕНЬШЕ, ЧЕМ КНОПКА ТРИ ПОЛОСКИ */
         .info-btn {
             position: fixed;
             top: 20px;
@@ -160,8 +194,7 @@
         .info-btn:active {
             background-color: rgba(0,0,0,0.6);
         }
-
-        .sort-menu {
+                .sort-menu {
             position: fixed;
             bottom: 80px;
             left: 20px;
@@ -649,6 +682,48 @@
         </div>
     </div>
 </div>
+    <script>
+    // АНИМАЦИЯ БЛИКОВ ПРИ СКРОЛЛЕ
+    (function() {
+        const wrappers = document.querySelectorAll('.image-wrapper');
+        if (!wrappers.length) return;
+        
+        let ticking = false;
+        
+        function updateHighlights() {
+            const scrollPercent = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+            const t = Math.min(1, Math.max(0, scrollPercent));
+            
+            const topLeftOpacity = 0.3 + t * 0.5;
+            const bottomRightOpacity = 0.6 - t * 0.5;
+            
+            for (let wrapper of wrappers) {
+                wrapper.style.setProperty('--top-opacity', topLeftOpacity);
+                wrapper.style.setProperty('--bottom-opacity', bottomRightOpacity);
+                wrapper.style.setProperty('--top-opacity-ie', topLeftOpacity);
+                wrapper.style.setProperty('--bottom-opacity-ie', bottomRightOpacity);
+            }
+            
+            ticking = false;
+        }
+        
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(updateHighlights);
+                ticking = true;
+            }
+        });
+        
+        updateHighlights();
+        
+        window.addEventListener('resize', () => {
+            if (!ticking) {
+                requestAnimationFrame(updateHighlights);
+                ticking = true;
+            }
+        });
+    })();
+    </script>
     <script>
     // ----- СПИСОК ФОНОВ -----
     const backgroundsList = [
