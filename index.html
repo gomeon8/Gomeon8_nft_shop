@@ -17,21 +17,6 @@
             position: relative;
         }
         
-        /* ОБЩИЙ СЛОЙ-БЛИК (волна света) */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 300px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0.7;
-            transition: top 0.08s linear;
-        }
-        
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -58,6 +43,20 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
             transition: all 0.2s ease;
             overflow: hidden;
+        }
+        
+        /* Блик-волна (работает только внутри рамки) */
+        .image-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 100%);
+            pointer-events: none;
+            z-index: 5;
+            transition: top 0.05s linear;
         }
         
         .gift-img {
@@ -671,13 +670,63 @@
     </div>
 </div>
     <script>
-    // ВОЛНА СВЕТА (двигается сверху вниз при скролле)
+    // ВОЛНА СВЕТА ТОЛЬКО НА РАМКАХ
     (function() {
-        const lightLayer = document.querySelector('body');
+        const wrappers = document.querySelectorAll('.image-wrapper');
+        if (!wrappers.length) return;
+        
         let ticking = false;
         
-        function updateLightWave() {
-            // Создаём временный style, если его нет
+        function updateWave() {
+            // Процент прокрутки от 0 до 1
+            const scrollTop = window.scrollY;
+            const maxScroll = document.body.scrollHeight - window.innerHeight;
+            let percent = maxScroll > 0 ? scrollTop / maxScroll : 0;
+            percent = Math.min(1, Math.max(0, percent));
+            
+            // Общая высота всех рамок с отступами
+            const grid = document.querySelector('.grid');
+            if (!grid) return;
+            
+            const gridRect = grid.getBoundingClientRect();
+            const scrollPercentInGrid = (scrollTop - gridRect.top + window.scrollY) / (grid.scrollHeight);
+            
+            // Для каждой рамки вычисляем, насколько её перекрывает волна
+            for (let wrapper of wrappers) {
+                const rect = wrapper.getBoundingClientRect();
+                const wrapperTop = rect.top + window.scrollY;
+                const wrapperBottom = wrapperTop + rect.height;
+                
+                // Волна — это полоса высотой 250px, которая движется вместе со скроллом
+                const waveHeight = 250;
+                const waveTop = scrollTop;
+                const waveBottom = waveTop + waveHeight;
+                
+                // Вычисляем, насколько рамка перекрыта волной (от 0 до 1)
+                let overlap = 0;
+                if (waveBottom > wrapperTop && waveTop < wrapperBottom) {
+                    const overlapStart = Math.max(waveTop, wrapperTop);
+                    const overlapEnd = Math.min(waveBottom, wrapperBottom);
+                    const overlapHeight = overlapEnd - overlapStart;
+                    overlap = Math.min(1, overlapHeight / rect.height);
+                }
+                
+                // Плавная яркость: при overlap=0 → 0, при overlap=1 → 0.7
+                const intensity = overlap * 0.7;
+                
+                // Применяем яркость через CSS-переменную для псевдоэлемента
+                wrapper.style.setProperty('--wave-intensity', intensity);
+                
+                // Обновляем стиль псевдоэлемента
+                const pseudoStyle = `
+                    opacity: ${intensity};
+                    top: ${Math.max(0, (waveTop - wrapperTop))}px;
+                `;
+                wrapper.style.setProperty('--wave-top', Math.max(0, (waveTop - wrapperTop)) + 'px');
+                wrapper.style.setProperty('--wave-opacity', intensity);
+            }
+            
+            // Применяем стили через глобальную переменную (работает во всех браузерах)
             let style = document.getElementById('wave-styles');
             if (!style) {
                 style = document.createElement('style');
@@ -685,42 +734,61 @@
                 document.head.appendChild(style);
             }
             
-            // Процент прокрутки от 0 до 1
-            const scrollTop = window.scrollY;
-            const maxScroll = document.body.scrollHeight - window.innerHeight;
-            let percent = maxScroll > 0 ? scrollTop / maxScroll : 0;
-            percent = Math.min(1, Math.max(0, percent));
-            
-            // Высота волны 300px. Двигаем её от 0% до (высота страницы - 300px)
-            const maxTop = document.body.scrollHeight - 300;
-            let waveTop = scrollTop;
-            
-            // Ограничиваем, чтобы волна не вылезала за пределы документа
-            waveTop = Math.min(maxTop, Math.max(0, waveTop));
-            
-            // Применяем стиль через CSS-переменную
-            style.innerHTML = `
-                body::before {
-                    top: ${waveTop}px !important;
-                    opacity: 0.75;
-                }
-            `;
+            let cssRules = '';
+            for (let wrapper of wrappers) {
+                const intensity = wrapper.style.getPropertyValue('--wave-intensity') || 0;
+                const waveTop = wrapper.style.getPropertyValue('--wave-top') || '0px';
+                cssRules += `
+                    .image-wrapper[style*="--wave-intensity"]::before {
+                        opacity: ${intensity} !important;
+                        top: ${waveTop} !important;
+                    }
+                `;
+            }
+            // Упрощённый вариант: обновляем через переменные в каждом wrapper
+            for (let wrapper of wrappers) {
+                const intensity = wrapper.style.getPropertyValue('--wave-opacity') || 0;
+                const waveTop = wrapper.style.getPropertyValue('--wave-top') || '0px';
+                wrapper.style.setProperty('--before-opacity', intensity);
+                wrapper.style.setProperty('--before-top', waveTop);
+            }
             
             ticking = false;
         }
         
+        // Функция для применения стилей к каждому wrapper
+        function applyStyles() {
+            for (let wrapper of wrappers) {
+                const intensity = parseFloat(wrapper.style.getPropertyValue('--wave-opacity')) || 0;
+                const waveTop = wrapper.style.getPropertyValue('--wave-top') || '0px';
+                // Применяем inline-стиль для псевдоэлемента (единственный надёжный способ)
+                const beforeStyle = wrapper.querySelector('style') || (() => {
+                    const s = document.createElement('style');
+                    wrapper.appendChild(s);
+                    return s;
+                })();
+                // Но проще обновлять через CSS-переменные и надеяться на поддержку
+                wrapper.style.setProperty('--before-opacity-fix', intensity);
+                wrapper.style.setProperty('--before-top-fix', waveTop);
+            }
+        }
+        
+        // Обновляем на скролле
         window.addEventListener('scroll', () => {
             if (!ticking) {
                 requestAnimationFrame(() => {
-                    updateLightWave();
+                    updateWave();
                     ticking = false;
                 });
                 ticking = true;
             }
         });
         
-        window.addEventListener('resize', () => updateLightWave());
-        updateLightWave();
+        window.addEventListener('resize', () => updateWave());
+        updateWave();
+        
+        // Дополнительно: обновляем после загрузки всех картинок
+        window.addEventListener('load', () => updateWave());
     })();
     </script>
         
