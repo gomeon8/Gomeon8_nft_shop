@@ -59,6 +59,19 @@
             pointer-events: none;
             z-index: 10;
         }
+        /* ПРАВЫЙ НИЖНИЙ БЛИК (МАЛЕНЬКИЙ, СИММЕТРИЧНЫЙ) */
+        .image-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 100% 100%, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 0 24px 0 20px;
+            pointer-events: none;
+            z-index: 10;
+        }
         
         .gift-img {
             width: 100%;
