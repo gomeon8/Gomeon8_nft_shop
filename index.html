@@ -32,19 +32,20 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        /* ЯРКИЙ ВОЛНОВОЙ БЛИК ТОЛЬКО НА РАМКАХ */
-.image-wrapper {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(12px);
-    border-radius: 24px;
-    padding: 8px;
-    margin-bottom: 12px;
-    position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s ease;
-    overflow: hidden;
-}
+        .image-wrapper {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 8px;
+            margin-bottom: 12px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+        
+        /* ЯРКИЙ ВОЛНОВОЙ БЛИК НА РАМКАХ */
         .image-wrapper::before {
             content: '';
             position: absolute;
@@ -53,10 +54,10 @@
             width: 140%;
             height: 80px;
             background: linear-gradient(90deg, 
-                                        rgba(255,255,255,0) 0%, 
-                                        rgba(255,255,255,0.9) 40%, 
-                                        rgba(255,255,255,0.9) 60%, 
-                                        rgba(255,255,255,0) 100%);
+                rgba(255,255,255,0) 0%, 
+                rgba(255,255,255,0.9) 40%, 
+                rgba(255,255,255,0.9) 60%, 
+                rgba(255,255,255,0) 100%);
             filter: blur(8px);
             transform: rotate(-5deg);
             pointer-events: none;
@@ -64,6 +65,7 @@
             transition: top 0.05s linear;
             opacity: 0.9;
         }
+        
         .gift-img {
             width: 100%;
             aspect-ratio: 1 / 1;
@@ -78,7 +80,7 @@
         .gift-name {
             font-weight: 600;
             font-size: 15px;
-            margin-bottom : 6px;
+            margin-bottom: 6px;
             letter-spacing: 0.3px;
             pointer-events: none;
             text-shadow: 0 1px 2px rgba(0,0,0,0.2);
@@ -675,90 +677,72 @@
     </div>
 </div>
     <script>
-    // ЯРКИЙ ВОЛНОВОЙ БЛИК НА РАМКАХ (как тот, что тебе нравился)
+    // ЯРКИЙ ВОЛНОВОЙ БЛИК НА РАМКАХ (исправленный)
     (function() {
         const wrappers = document.querySelectorAll('.image-wrapper');
         if (!wrappers.length) return;
         
-        let ticking = false;
         let animationFrame = null;
         
         function updateWave() {
             const scrollTop = window.scrollY;
             const viewportHeight = window.innerHeight;
             
-            // Для каждой рамки вычисляем положение волны
             for (let wrapper of wrappers) {
                 const rect = wrapper.getBoundingClientRect();
                 const wrapperTopAbs = rect.top + scrollTop;
                 const wrapperBottomAbs = wrapperTopAbs + rect.height;
                 
-                // Волна движется со скроллом, но сдвинута относительно верха экрана
-                const wavePos = scrollTop + viewportHeight * 0.3; // волна на 30% ниже верхнего края экрана
+                // Волна движется со скроллом, на 30% ниже верхнего края экрана
+                const wavePos = scrollTop + viewportHeight * 0.3;
                 const waveHeight = 80;
                 const waveTop = wavePos - waveHeight / 2;
                 const waveBottom = wavePos + waveHeight / 2;
                 
-                // Вычисляем, как волна пересекается с рамкой
-                let overlap = 0;
                 let offset = -100;
+                let intensity = 0;
                 
                 if (waveBottom > wrapperTopAbs && waveTop < wrapperBottomAbs) {
                     const overlapStart = Math.max(waveTop, wrapperTopAbs);
                     const overlapEnd = Math.min(waveBottom, wrapperBottomAbs);
-                    overlap = (overlapEnd - overlapStart) / waveHeight;
-                    
-                    // Позиция волны относительно рамки
+                    const overlapHeight = overlapEnd - overlapStart;
+                    intensity = Math.min(0.95, (overlapHeight / waveHeight) * 0.95);
                     offset = waveTop - wrapperTopAbs;
                     offset = Math.min(rect.height, Math.max(-waveHeight, offset));
                 }
                 
-                // Яркость: если рамка перекрыта волной — ярко, если нет — совсем тускло
-                let intensity = overlap * 0.95;
-                intensity = Math.min(0.95, Math.max(0, intensity));
-                
-                // Применяем стиль
-                if (intensity > 0.05) {
-                    wrapper.style.setProperty('--wave-top', offset + 'px');
-                    wrapper.style.setProperty('--wave-opacity', intensity);
-                    wrapper.style.setProperty('--wave-display', 'block');
-                } else {
-                    wrapper.style.setProperty('--wave-top', '-100px');
-                    wrapper.style.setProperty('--wave-opacity', '0');
-                }
+                // Применяем стиль напрямую к псевдоэлементу через CSS-переменные
+                wrapper.style.setProperty('--wave-top', offset + 'px');
+                wrapper.style.setProperty('--wave-opacity', intensity);
             }
             
-            // Применяем через глобальный стиль (надёжно)
-            let style = document.getElementById('wave-glow');
+            // Создаём глобальный стиль для применения
+            let style = document.getElementById('wave-styles');
             if (!style) {
                 style = document.createElement('style');
-                style.id = 'wave-glow';
+                style.id = 'wave-styles';
                 document.head.appendChild(style);
             }
             
-            let cssRules = '';
+            let css = '';
             for (let i = 0; i < wrappers.length; i++) {
-                const wrapper = wrappers[i];
-                const top = wrapper.style.getPropertyValue('--wave-top') || '-100px';
-                const opacity = wrapper.style.getPropertyValue('--wave-opacity') || '0';
-                cssRules += `
+                const top = wrappers[i].style.getPropertyValue('--wave-top') || '-100px';
+                const opacity = wrappers[i].style.getPropertyValue('--wave-opacity') || '0';
+                css += `
                     .image-wrapper:nth-child(${i+1})::before {
                         top: ${top} !important;
                         opacity: ${opacity} !important;
                     }
                 `;
             }
-            style.innerHTML = cssRules;
+            style.innerHTML = css;
             
-            ticking = false;
+            animationFrame = null;
         }
         
         function handleScroll() {
-            if (animationFrame) cancelAnimationFrame(animationFrame);
-            animationFrame = requestAnimationFrame(() => {
-                updateWave();
-                animationFrame = null;
-            });
+            if (animationFrame) return;
+            animationFrame = requestAnimationFrame(updateWave);
         }
         
         window.addEventListener('scroll', handleScroll);
@@ -767,12 +751,6 @@
         updateWave();
     })();
     </script>
-    
-            
-            
-    
-            
-        
     <script>
     // ----- СПИСОК ФОНОВ -----
     const backgroundsList = [
@@ -783,7 +761,7 @@
         "Rifle Green": "#434b40", "Roman Silver": "#838996", "Rosewood": "#9a6163", "Sapphire": "#558bc3", "Satin Gold": "#aa8c41", "Seal Brown": "#533e36", "Shamrock Green": "#71a253", "Silver Blue": "#8a9aad", "Sky Blue": "#549ec6", "Steel Grey": "#71797e", "Strawberry": "#cb7667", "Tactical Pine": "#366e69", "Tomato": "#de643f", "Turquoise": "#4ca9a4", "Neon Blue": "#6b79ea", "Old Gold": "#a47a2e", "Onyx Black": "#353839", "Orange": "#c8803f", "Pacific Cyan": "#4baab0", "Pacific Green": "#56b08c", "Persimmon": "#d3845b", "Pine Green": "#518c72", "Pistachio": "#71965e", "Platinum": "#9c9892", "Pure Gold": "#ad8f37", "Purple": "#965795", "Ranger Green": "#ab6041", "Raspberry": "#c8677f", "Jade Green": "#47ac88", "Khaki Green": "#86915e", "Lavender": "#9e6fce", "Lemongrass": "#77a14a", "Light Olive": "#a39753", "Malachite": "#63a455", "Marine Blue": "#405788", "Mexican Pink": "#d45384", "Midnight Blue": "#414e69", "Mint Green": "#62b46d", "Moonstone": "#65969f", "Mustard": "#cb850d", "Mystic Pearl": "#bd696e", "Navy Blue": "#617fd0", "Electric Purple": "#a966cd", "Emerald": "#59af75", "English Violet": "#986aa2", "Fandango": "#c26ea0", "Feldgrau": "#707c73", "Fire Engine": "#d84749", "French Blue": "#4581ab", "French Violet": "#a955df", "Grape": "#885cad", "Gunmetal": "#3d4b52", "Gunship Green": "#477459", "Hunter Green": "#689666", "Indigo Dye": "#496b83", "Ivory White": "#acaba5", "Carmine": "#c64640", "Carrot Juice": "#d18559", "Celtic Blue": "#399ce1", "Chestnut": "#a85943", "Chocolate": "#865344", "Cobalt Blue": "#5771bf", "Copper": "#ba7844", "Coral Red": "#ce725a", "Cyberpunk": "#8673e3", "Dark Green": "#3a5236", "Dark Lilac": "#9e688f", "Deep Cyan": "#23a4a1", "Desert Sand": "#928268", "Electric Indigo": "#786ee4", "Black": "#1b1b1b", "Amber": "#c19332", "Aquamarine": "#4fada4", "Azure Blue": "#4b99b5", "Battleship Grey": "#797a73", "Burgundy": "#824a54", "Burnt Sienna": "#c35831", "Camo Green": "#607d45", "Cappuccino": "#937667", "Caramel": "#c38530"
     };
 
-    // ----- ТВОИ ПОДАРКИ -----
+    // ----- ТВОИ ПОДАРКИ (ОБНОВЛЁННЫЙ СПИСОК) -----
     const originalGifts = [
         { id: 2, name: "Mood Pack", price: 838, bg: "Shamrock Green", link: "https://t.me/nft/MoodPack-7495", imageUrl: "https://i.ibb.co/ZpQJQ1HZ/IMG-20260427-235518-214.jpg" },
         { id: 4, name: "Jingle Bells", price: 1290, bg: "Aquamarine", link: "http://t.me/nft/JingleBells-28899", imageUrl: "https://i.ibb.co/h1YNmH8k/IMG-20260425-183559-003.jpg" },
@@ -813,6 +791,7 @@
     let activeGift = null;
     let isPopupVisible = false;
 
+    // ----- ОТРИСОВКА СЕТКИ -----
     function renderGrid(data) {
         const container = document.getElementById('nftGrid');
         if (!container) return;
@@ -845,7 +824,7 @@
             
             const tgBtn = document.createElement('div');
             tgBtn.className = 'tg-btn';
-            tgBtn.innerHTML = `<img src="https://static.vecteezy.com/system/resources/previews/049/694/893/large_2x/telegram-3d-illustration-free-png.png" alt="TG">`;
+            tgBtn.innerHTML = `<img src="https://i.ibb.co/6RTwybJx/123-20260430213721.png" alt="TG">`;
             tgBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const rect = imgWrapper.getBoundingClientRect();
@@ -859,6 +838,7 @@
         });
     }
 
+    // ----- ПЛАШКА ДЕЙСТВИЙ (подарок) -----
     const popup = document.getElementById('actionPopup');
     const actionMessageBtn = document.getElementById('actionMessageBtn');
     const actionViewBtn = document.getElementById('actionViewBtn');
@@ -1081,5 +1061,6 @@
 </script>
 </body>
 </html>
+        
     
              
