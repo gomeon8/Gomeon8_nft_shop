@@ -633,7 +633,7 @@
     </div>
     <hr>
     <button id="sortReset"> Сбросить</button>
-    </div>
+</div>
     <div class="modal-overlay" id="bgModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -682,7 +682,6 @@
     </div>
 </div>
     <script>
-    // ----- СПИСОК ФОНОВ -----
     const backgroundsList = [
         "Rifle Green", "Roman Silver", "Rosewood", "Sapphire", "Satin Gold", "Seal Brown", "Shamrock Green", "Silver Blue", "Sky Blue", "Steel Grey", "Strawberry", "Tactical Pine", "Tomato", "Turquoise", "Neon Blue", "Old Gold", "Onyx Black", "Orange", "Pacific Cyan", "Pacific Green", "Persimmon", "Pine Green", "Pistachio", "Platinum", "Pure Gold", "Purple", "Ranger Green", "Raspberry", "Jade Green", "Khaki Green", "Lavender", "Lemongrass", "Light Olive", "Malachite", "Marine Blue", "Mexican Pink", "Midnight Blue", "Mint Green", "Moonstone", "Mustard", "Mystic Pearl", "Navy Blue", "Electric Purple", "Emerald", "English Violet", "Fandango", "Feldgrau", "Fire Engine", "French Blue", "French Violet", "Grape", "Gunmetal", "Gunship Green", "Hunter Green", "Indigo Dye", "Ivory White", "Carmine", "Carrot Juice", "Celtic Blue", "Chestnut", "Chocolate", "Cobalt Blue", "Copper", "Coral Red", "Cyberpunk", "Dark Green", "Dark Lilac", "Deep Cyan", "Desert Sand", "Electric Indigo", "Black", "Amber", "Aquamarine", "Azure Blue", "Battleship Grey", "Burgundy", "Burnt Sienna", "Camo Green", "Cappuccino", "Caramel"
     ];
@@ -713,43 +712,13 @@
         { id: 26, name: "Bunny Muffin", price: 1053, bg: "Satin Gold", link: "https://t.me/nft/BunnyMuffin-17610", imageUrl: "https://i.ibb.co/xKM4Kxb2/IMG-20260507-211340-891.jpg" },
         { id: 27, name: "Faith Amulet", price: 802, bg: "Electric Indigo", link: "https://t.me/nft/FaithAmulet-34380", imageUrl: "https://i.ibb.co/vvHg0vv1/IMG-20260507-211342-483.jpg" },
         { id: 28, name: "Mood Pack", price: 619, bg: "Purple", link: "https://t.me/nft/MoodPack-72566", imageUrl: "https://i.ibb.co/6Ryj8j68/IMG-20260507-222927-018.jpg" },
-        { id: 29, name: "Pool Float", price: 495, bg: "Malachite", link: "https://t.me/nft/PoolFloat-59552", imageUrl: "https://i.ibb.co/mFTFpkt8/IMG-20260508-000417-947.jpg" }
-    ];
+        { id: 29, name: "Pool Float", price: 495, bg: "Malachite", link: "https://t.me/nft/PoolFloat-59552", imageUrl: "https://i.ibb.co/mFTFpkt8/IMG-20260508-000417-947.jpg" }    ];
 
     let currentGifts = [...originalGifts];
     let selectedBackgrounds = [];
     let currentBgFilter = null;
     let activeGift = null;
     let isPopupVisible = false;
-
-    // АНИМАЦИЯ КНОПОК (RIPPLE)
-    function addRippleEffect(event) {
-        const button = event.currentTarget;
-        if (!button) return;
-        button.classList.add('press');
-        setTimeout(() => button.classList.remove('press'), 100);
-        const ripple = document.createElement('span');
-        ripple.className = 'ripple';
-        const rect = button.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = event.clientX - rect.left - size / 2;
-        const y = event.clientY - rect.top - size / 2;
-        ripple.style.width = ripple.style.height = size + 'px';
-        ripple.style.left = x + 'px';
-        ripple.style.top = y + 'px';
-        ripple.style.position = 'absolute';
-        button.style.position = 'relative';
-        button.appendChild(ripple);
-        setTimeout(() => ripple.remove(), 400);
-    }
-
-    function applyAnimationsToButtons() {
-        const buttons = document.querySelectorAll('button, .tg-btn, .fab, .info-btn, .close-modal, .close-tasks');
-        buttons.forEach(btn => {
-            btn.removeEventListener('click', addRippleEffect);
-            btn.addEventListener('click', addRippleEffect);
-        });
-    }
 
     function renderGrid(data) {
         const container = document.getElementById('nftGrid');
@@ -795,7 +764,6 @@
             card.appendChild(priceWrapper);
             container.appendChild(card);
         });
-        applyAnimationsToButtons();
     }
 
     const popup = document.getElementById('actionPopup');
@@ -956,8 +924,6 @@
     applyBtn.addEventListener('click', applyFilter);
     
     renderGrid(currentGifts);
-    setTimeout(() => { applyAnimationsToButtons(); }, 100);
 </script>
 </body>
 </html>
-    
