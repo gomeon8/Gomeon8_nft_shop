@@ -62,6 +62,15 @@
             -webkit-tap-highlight-color: transparent;
         }
         
+        /* КАРТОЧКА КОЛЛЕКЦИИ — ЗАНИМАЕТ ВСЮ ШИРИНУ ГРИДА (3 КОЛОНКИ) */
+        .collection-card {
+            grid-column: span 3;
+            text-align: center;
+            cursor: default;
+            -webkit-tap-highlight-color: transparent;
+            margin-bottom: 20px;
+        }
+        
         .image-wrapper {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(12px);
@@ -172,16 +181,12 @@
             padding-top: 24px;
         }
 
-        .collection-card {
-            text-align: center;
-            cursor: default;
-            -webkit-tap-highlight-color: transparent;
-        }
+        /* КАРТОЧКА КОЛЛЕКЦИИ — ПРЕВЬЮ 3x2 */
         .collection-preview {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(12px);
             border-radius: 24px;
-            padding: 8px;
+            padding: 12px;
             margin-bottom: 12px;
             position: relative;
             border: 1px solid rgba(255, 255, 255, 0.25);
@@ -215,12 +220,12 @@
         .preview-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
+            gap: 8px;
         }
         .preview-item {
             aspect-ratio: 1 / 1;
             background: #1a1a1a;
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
         }
         .preview-item img {
@@ -230,27 +235,27 @@
         }
         .collection-name {
             font-weight: 600;
-            font-size: 15px;
-            margin-bottom: 6px;
+            font-size: 18px;
+            margin-bottom: 8px;
             text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         .collection-info {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 16px;
             flex-wrap: wrap;
         }
         .collection-count {
-            font-size: 14px;
+            font-size: 15px;
             color: #ddd;
         }
         .collection-price {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 700;
             background: #a971c8;
             display: inline-block;
-            padding: 4px 12px;
+            padding: 4px 16px;
             border-radius: 40px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
@@ -619,6 +624,9 @@
             .action-btn { padding: 8px 16px; font-size: 13px; }
             .tasks-content { padding: 16px; }
             .back-btn { width: 36px; height: 36px; top: 55px; right: 16px; font-size: 18px; }
+            .collection-name { font-size: 16px; }
+            .collection-price { font-size: 16px; padding: 4px 12px; }
+            .collection-count { font-size: 14px; }
         }
     </style>
 </head>
@@ -1139,4 +1147,3 @@
 </script>
 </body>
 </html>
-        
