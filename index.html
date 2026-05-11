@@ -11,10 +11,39 @@
             background: radial-gradient(ellipse at 30% 30%, #8a2be2, #4a0e6b 70%, #1a0033);
             background-attachment: fixed;
             font-family: 'Segoe UI', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
-            padding: 20px 16px 80px 16px;
+            padding: 80px 16px 80px 16px;
             color: white;
             min-height: 100vh;
             position: relative;
+        }
+        
+        .tabs-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px);
+            display: flex;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 16px 0;
+            font-size: 17px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: all 0.2s;
+            background: none;
+            border: none;
+            font-family: inherit;
+        }
+        .tab.active {
+            color: white;
+            border-bottom: 2px solid #a971c8;
         }
         
         .grid {
@@ -26,6 +55,7 @@
             position: relative;
             z-index: 2;
         }
+        
         .gift-card {
             text-align: center;
             cursor: default;
@@ -142,6 +172,116 @@
             padding-top: 24px;
         }
 
+        .collection-card {
+            text-align: center;
+            cursor: default;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .collection-preview {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 8px;
+            margin-bottom: 12px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        .collection-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at 0% 0%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 24px 0 20px 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .collection-preview::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at 100% 100%, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 20px 0 24px 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+        .preview-item {
+            aspect-ratio: 1 / 1;
+            background: #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .collection-name {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 6px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .collection-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .collection-count {
+            font-size: 14px;
+            color: #ddd;
+        }
+        .collection-price {
+            font-size: 16px;
+            font-weight: 700;
+            background: #a971c8;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 40px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .collection-price::before {
+            content: "₽ ";
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: background 0.2s;
+            z-index: 1000;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+        .back-btn:active {
+            background-color: rgba(0,0,0,0.6);
+        }
+        
         .fab {
             position: fixed;
             bottom: 20px;
@@ -231,25 +371,10 @@
             transition: background 0.1s;
             font-family: inherit;
         }
-        .sort-menu button:active {
-            background-color: #3a3a3c;
-        }
-        hr {
-            margin: 4px 0;
-            border-color: #3a3a3c;
-        }
-        .filter-range {
-            padding: 12px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .price-inputs {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+        .sort-menu button:active { background-color: #3a3a3c; }
+        hr { margin: 4px 0; border-color: #3a3a3c; }
+        .filter-range { padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+        .price-inputs { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .price-inputs input {
             background: #1c1c1e;
             border: 1px solid #3a3a3c;
@@ -261,15 +386,8 @@
             text-align: center;
             font-family: inherit;
         }
-        .price-inputs input:focus {
-            outline: none;
-            border-color: #a971c8;
-        }
-        .price-inputs span {
-            color: #aaa;
-            font-size: 16px;
-            font-weight: 500;
-        }
+        .price-inputs input:focus { outline: none; border-color: #a971c8; }
+        .price-inputs span { color: #aaa; font-size: 16px; font-weight: 500; }
         .apply-btn {
             background-color: #4a4a4d;
             color: white;
@@ -286,18 +404,8 @@
             letter-spacing: 0.5px;
             text-align: center;
         }
-        .apply-btn.active {
-            background-color: #f5c542;
-            color: #1c1c1e;
-            font-weight: 700;
-        }
-        .filter-label {
-            font-size: 13px;
-            color: #aaa;
-            margin-bottom: 5px;
-            display: block;
-            font-weight: 500;
-        }
+        .apply-btn.active { background-color: #f5c542; color: #1c1c1e; font-weight: 700; }
+        .filter-label { font-size: 13px; color: #aaa; margin-bottom: 5px; display: block; font-weight: 500; }
 
         .modal-overlay {
             position: fixed;
@@ -314,10 +422,7 @@
             opacity: 0;
             transition: all 0.2s ease;
         }
-        .modal-overlay.show {
-            visibility: visible;
-            opacity: 1;
-        }
+        .modal-overlay.show { visibility: visible; opacity: 1; }
         .modal-content {
             background-color: #2c2c2e;
             border-radius: 24px;
@@ -329,13 +434,7 @@
             position: relative;
             overflow: hidden;
         }
-        .modal-header {
-            padding: 16px;
-            border-bottom: 1px solid #3a3a3c;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .modal-header { padding: 16px; border-bottom: 1px solid #3a3a3c; display: flex; justify-content: space-between; align-items: center; }
         .modal-header h3 { font-size: 18px; font-weight: 600; }
         .close-modal {
             background: none;
@@ -351,10 +450,7 @@
             border-radius: 50%;
         }
         .close-modal:active { background-color: #3a3a3c; }
-        .search-box {
-            padding: 12px 16px;
-            border-bottom: 1px solid #3a3a3c;
-        }
+        .search-box { padding: 12px 16px; border-bottom: 1px solid #3a3a3c; }
         .search-box input {
             width: 100%;
             background: #1c1c1e;
@@ -365,15 +461,7 @@
             font-size: 15px;
             font-family: inherit;
         }
-        .search-box input:focus {
-            outline: none;
-            border-color: #a971c8;
-        }
-        .backgrounds-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 8px 0;
-        }
+        .backgrounds-list { flex: 1; overflow-y: auto; padding: 8px 0; }
         .bg-item {
             display: flex;
             align-items: center;
@@ -383,17 +471,8 @@
             transition: background 0.1s;
         }
         .bg-item:active { background-color: #3a3a3c; }
-        .color-circle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .bg-name {
-            flex: 1;
-            font-size: 14px;
-            font-weight: 500;
-        }
+        .color-circle { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; }
+        .bg-name { flex: 1; font-size: 14px; font-weight: 500; }
         .bg-checkbox {
             width: 22px;
             height: 22px;
@@ -406,16 +485,8 @@
             transition: all 0.1s;
             flex-shrink: 0;
         }
-        .bg-checkbox.checked {
-            background: white;
-            border-color: white;
-        }
-        .bg-checkbox.checked::after {
-            content: "✓";
-            color: black;
-            font-size: 14px;
-            font-weight: bold;
-        }
+        .bg-checkbox.checked { background: white; border-color: white; }
+        .bg-checkbox.checked::after { content: "✓"; color: black; font-size: 14px; font-weight: bold; }
         .select-all-row {
             display: flex;
             align-items: center;
@@ -437,30 +508,8 @@
             position: sticky;
             bottom: 0;
         }
-        .clear-btn {
-            flex: 1;
-            background: #4a4a4d;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            font-family: inherit;
-        }
-        .show-btn {
-            flex: 1;
-            background: #f5c542;
-            color: #1c1c1e;
-            border: none;
-            padding: 12px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 15px;
-            cursor: pointer;
-            font-family: inherit;
-        }
+        .clear-btn { flex: 1; background: #4a4a4d; color: white; border: none; padding: 12px; border-radius: 30px; font-weight: 600; font-size: 15px; cursor: pointer; font-family: inherit; }
+        .show-btn { flex: 1; background: #f5c542; color: #1c1c1e; border: none; padding: 12px; border-radius: 30px; font-weight: 700; font-size: 15px; cursor: pointer; font-family: inherit; }
         .clear-btn:active, .show-btn:active { opacity: 0.8; }
         
         .action-popup {
@@ -478,10 +527,7 @@
             visibility: hidden;
             transition: opacity 0.15s ease, visibility 0.15s ease;
         }
-        .action-popup.show {
-            opacity: 1;
-            visibility: visible;
-        }
+        .action-popup.show { opacity: 1; visibility: visible; }
         .action-popup::before {
             content: '';
             position: absolute;
@@ -509,9 +555,7 @@
             width: 100%;
             text-align: center;
         }
-        .action-btn:active {
-            background: #4a4a4d;
-        }
+        .action-btn:active { background: #4a4a4d; }
 
         .tasks-modal {
             position: fixed;
@@ -528,10 +572,7 @@
             opacity: 0;
             transition: all 0.2s ease;
         }
-        .tasks-modal.show {
-            visibility: visible;
-            opacity: 1;
-        }
+        .tasks-modal.show { visibility: visible; opacity: 1; }
         .tasks-content {
             background-color: #2c2c2e;
             border-radius: 24px;
@@ -543,18 +584,8 @@
             padding: 20px;
             backdrop-filter: blur(10px);
         }
-        .tasks-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #3a3a3c;
-        }
-        .tasks-header h3 {
-            font-size: 18px;
-            font-weight: 600;
-        }
+        .tasks-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #3a3a3c; }
+        .tasks-header h3 { font-size: 18px; font-weight: 600; }
         .close-tasks {
             background: none;
             border: none;
@@ -568,24 +599,10 @@
             justify-content: center;
             border-radius: 50%;
         }
-        .close-tasks:active {
-            background-color: #3a3a3c;
-        }
-        .tasks-text {
-            font-size: 14px;
-            line-height: 1.5;
-            color: #ccc;
-        }
-        .tasks-text strong {
-            color: white;
-            font-weight: 700;
-            display: block;
-            margin-top: 12px;
-            margin-bottom: 6px;
-        }
-        .tasks-text strong:first-of-type {
-            margin-top: 0;
-        }
+        .close-tasks:active { background-color: #3a3a3c; }
+        .tasks-text { font-size: 14px; line-height: 1.5; color: #ccc; }
+        .tasks-text strong { color: white; font-weight: 700; display: block; margin-top: 12px; margin-bottom: 6px; }
+        .tasks-text strong:first-of-type { margin-top: 0; }
 
         @media (max-width: 560px) {
             .gift-name { font-size: 13px; }
@@ -601,12 +618,19 @@
             .bg-name { font-size: 13px; }
             .action-btn { padding: 8px 16px; font-size: 13px; }
             .tasks-content { padding: 16px; }
+            .back-btn { width: 36px; height: 36px; top: 55px; right: 16px; font-size: 18px; }
         }
     </style>
 </head>
 <body>
 
+<div class="tabs-bar">
+    <button class="tab active" id="tabGifts">Подарки</button>
+    <button class="tab" id="tabCollections">Коллекции</button>
+</div>
+
 <div class="grid" id="nftGrid"></div>
+<div class="grid" id="collectionsGrid" style="display: none;"></div>
 <div class="footer-note"> © Gomeon Shop</div>
 
 <div class="fab" id="sortFab">
@@ -634,7 +658,10 @@
     <hr>
     <button id="sortReset"> Сбросить</button>
 </div>
-    <div class="modal-overlay" id="bgModal">
+
+<div class="back-btn" id="backBtn" style="display: none;">←</div>
+
+<div class="modal-overlay" id="bgModal">
     <div class="modal-content">
         <div class="modal-header">
             <h3>Выбрать фон</h3>
@@ -657,7 +684,7 @@
 
 <div id="actionPopup" class="action-popup" style="display: none;">
     <button id="actionMessageBtn" class="action-btn"> Написать владельцу</button>
-    <button id="actionViewBtn" class="action-btn"> Посмотреть подарок</button>
+    <button id="actionViewBtn" class="action-btn"> Посмотреть коллекцию</button>
 </div>
 
 <div id="tasksModal" class="tasks-modal">
@@ -682,6 +709,7 @@
     </div>
 </div>
     <script>
+    // ========== ФОНЫ (как раньше) ==========
     const backgroundsList = [
         "Rifle Green", "Roman Silver", "Rosewood", "Sapphire", "Satin Gold", "Seal Brown", "Shamrock Green", "Silver Blue", "Sky Blue", "Steel Grey", "Strawberry", "Tactical Pine", "Tomato", "Turquoise", "Neon Blue", "Old Gold", "Onyx Black", "Orange", "Pacific Cyan", "Pacific Green", "Persimmon", "Pine Green", "Pistachio", "Platinum", "Pure Gold", "Purple", "Ranger Green", "Raspberry", "Jade Green", "Khaki Green", "Lavender", "Lemongrass", "Light Olive", "Malachite", "Marine Blue", "Mexican Pink", "Midnight Blue", "Mint Green", "Moonstone", "Mustard", "Mystic Pearl", "Navy Blue", "Electric Purple", "Emerald", "English Violet", "Fandango", "Feldgrau", "Fire Engine", "French Blue", "French Violet", "Grape", "Gunmetal", "Gunship Green", "Hunter Green", "Indigo Dye", "Ivory White", "Carmine", "Carrot Juice", "Celtic Blue", "Chestnut", "Chocolate", "Cobalt Blue", "Copper", "Coral Red", "Cyberpunk", "Dark Green", "Dark Lilac", "Deep Cyan", "Desert Sand", "Electric Indigo", "Black", "Amber", "Aquamarine", "Azure Blue", "Battleship Grey", "Burgundy", "Burnt Sienna", "Camo Green", "Cappuccino", "Caramel"
     ];
@@ -690,6 +718,7 @@
         "Rifle Green": "#434b40", "Roman Silver": "#838996", "Rosewood": "#9a6163", "Sapphire": "#558bc3", "Satin Gold": "#aa8c41", "Seal Brown": "#533e36", "Shamrock Green": "#71a253", "Silver Blue": "#8a9aad", "Sky Blue": "#549ec6", "Steel Grey": "#71797e", "Strawberry": "#cb7667", "Tactical Pine": "#366e69", "Tomato": "#de643f", "Turquoise": "#4ca9a4", "Neon Blue": "#6b79ea", "Old Gold": "#a47a2e", "Onyx Black": "#353839", "Orange": "#c8803f", "Pacific Cyan": "#4baab0", "Pacific Green": "#56b08c", "Persimmon": "#d3845b", "Pine Green": "#518c72", "Pistachio": "#71965e", "Platinum": "#9c9892", "Pure Gold": "#ad8f37", "Purple": "#965795", "Ranger Green": "#ab6041", "Raspberry": "#c8677f", "Jade Green": "#47ac88", "Khaki Green": "#86915e", "Lavender": "#9e6fce", "Lemongrass": "#77a14a", "Light Olive": "#a39753", "Malachite": "#63a455", "Marine Blue": "#405788", "Mexican Pink": "#d45384", "Midnight Blue": "#414e69", "Mint Green": "#62b46d", "Moonstone": "#65969f", "Mustard": "#cb850d", "Mystic Pearl": "#bd696e", "Navy Blue": "#617fd0", "Electric Purple": "#a966cd", "Emerald": "#59af75", "English Violet": "#986aa2", "Fandango": "#c26ea0", "Feldgrau": "#707c73", "Fire Engine": "#d84749", "French Blue": "#4581ab", "French Violet": "#a955df", "Grape": "#885cad", "Gunmetal": "#3d4b52", "Gunship Green": "#477459", "Hunter Green": "#689666", "Indigo Dye": "#496b83", "Ivory White": "#acaba5", "Carmine": "#c64640", "Carrot Juice": "#d18559", "Celtic Blue": "#399ce1", "Chestnut": "#a85943", "Chocolate": "#865344", "Cobalt Blue": "#5771bf", "Copper": "#ba7844", "Coral Red": "#ce725a", "Cyberpunk": "#8673e3", "Dark Green": "#3a5236", "Dark Lilac": "#9e688f", "Deep Cyan": "#23a4a1", "Desert Sand": "#928268", "Electric Indigo": "#786ee4", "Black": "#1b1b1b", "Amber": "#c19332", "Aquamarine": "#4fada4", "Azure Blue": "#4b99b5", "Battleship Grey": "#797a73", "Burgundy": "#824a54", "Burnt Sienna": "#c35831", "Camo Green": "#607d45", "Cappuccino": "#937667", "Caramel": "#c38530"
     };
 
+    // ========== ОДИНОЧНЫЕ ПОДАРКИ ==========
     const originalGifts = [
         { id: 2, name: "Mood Pack", price: 838, bg: "Shamrock Green", link: "https://t.me/nft/MoodPack-7495", imageUrl: "https://i.ibb.co/ZpQJQ1HZ/IMG-20260427-235518-214.jpg" },
         { id: 4, name: "Jingle Bells", price: 1290, bg: "Aquamarine", link: "http://t.me/nft/JingleBells-28899", imageUrl: "https://i.ibb.co/h1YNmH8k/IMG-20260425-183559-003.jpg" },
@@ -707,32 +736,76 @@
         { id: 20, name: "Fresh Socks", price: 748, bg: "Mustard", link: "https://t.me/nft/FreshSocks-114700", imageUrl: "https://i.ibb.co/nskKwxjd/IMG-20260430-224520-037.jpg" },
         { id: 22, name: "Lol Pop", price: 6090, bg: "Black", link: "https://t.me/nft/LolPop-105677", imageUrl: "https://i.ibb.co/twNVPShk/IMG-20260503-000329-664.jpg" },
         { id: 23, name: "Candy Cane", price: 1806, bg: "Onyx Black", link: "https://t.me/nft/CandyCane-167056", imageUrl: "https://i.ibb.co/XZmYycm3/IMG-20260507-211336-551.jpg" },
+        { id: 24, name: "Pet Snake", price: 677, bg: "Rifle Green", link: "https://t.me/nft/PetSnake-45969", imageUrl: "https://i.ibb.co/SSnPmLm/IMG-20260507-211338-433.jpg" },
         { id: 25, name: "Big Year", price: 920, bg: "Purple", link: "https://t.me/nft/BigYear-38754", imageUrl: "https://i.ibb.co/RGB03Y0Z/IMG-20260507-211339-747.jpg" },
         { id: 26, name: "Bunny Muffin", price: 1053, bg: "Satin Gold", link: "https://t.me/nft/BunnyMuffin-17610", imageUrl: "https://i.ibb.co/xKM4Kxb2/IMG-20260507-211340-891.jpg" },
-        { id: 27, name: "Faith Amulet", price: 802, bg: "Electric Indigo", link: "https://t.me/nft/FaithAmulet-34380", imageUrl: "https://i.ibb.co/vvHg0vv1/IMG-20260507-211342-483.jpg" },
-        { id: 28, name: "Mood Pack", price: 619, bg: "Purple", link: "https://t.me/nft/MoodPack-72566", imageUrl: "https://i.ibb.co/6Ryj8j68/IMG-20260507-222927-018.jpg" },
-        { id: 30, name: "Lunar Snake", price: 645, bg: "Navy Blue", link: "https://t.me/nft/LunarSnake-57993", imageUrl: "https://i.ibb.co/BVyFFc80/IMG-20260509-130104-612.jpg" },
-        { id: 31, name: "Lunar Snake", price: 1018, bg: "Cyberpunk", link: "https://t.me/nft/LunarSnake-170268", imageUrl: "https://i.ibb.co/qFNsmFLY/IMG-20260509-130106-300.jpg" },
-        { id: 32, name: "Lush Bouquet", price: 1785, bg: "Cappuccino", link: "https://t.me/nft/LushBouquet-77322", imageUrl: "https://i.ibb.co/vxvBPh2d/IMG-20260509-130107-624.jpg" }
-        
-        
-        
+        { id: 27, name: "Faith Amulet", price: 802, bg: "Electric Indigo", link: "https://t.me/nft/FaithAmulet-34380", imageUrl: "https://i.ibb.co/vvHg0vv1/IMG-20260507-211342-483.jpg" }
     ];
 
+    // ========== КОЛЛЕКЦИИ ==========
+    // КАК ДОБАВЛЯТЬ НОВУЮ КОЛЛЕКЦИЮ:
+    // 1. Скопируй блок { ... }, вставь в массив collections
+    // 2. Заполни: id (уникальный), name, price (за всю коллекцию), count (сколько подарков), previewImages (массив из 2-6 ссылок на картинки), giftLinks (массив ссылок на подарки t.me/nft/...)
+    const collections = [
+        {
+            id: 1,
+            name: "Новогодний набор",
+            price: 5000,
+            count: 7,
+            previewImages: [
+                "https://i.ibb.co/ZpQJQ1HZ/IMG-20260427-235518-214.jpg",
+                "https://i.ibb.co/h1YNmH8k/IMG-20260425-183559-003.jpg",
+                "https://i.ibb.co/Vpw6Cd7x/IMG-20260425-171429-926.jpg",
+                "https://i.ibb.co/fGChLYDq/IMG-20260425-184633-206.jpg",
+                "https://i.ibb.co/SDcM2FmR/IMG-20260425-185100-731.jpg",
+                "https://i.ibb.co/xSGNT2CG/IMG-20260425-185541-193.jpg"
+            ],
+            giftLinks: [
+                "https://t.me/nft/MoodPack-7495",
+                "https://t.me/nft/JingleBells-28899",
+                "https://t.me/nft/ChillFlame-197348",
+                "https://t.me/nft/DeskCalendar-233899",
+                "https://t.me/nft/VictoryMedal-12550",
+                "https://t.me/nft/RestlessJar-43217",
+                "https://t.me/nft/MoodPack-152015"
+            ]
+        },
+        {
+            id: 2,
+            name: "Зимняя сказка",
+            price: 3500,
+            count: 4,
+            previewImages: [
+                "https://i.ibb.co/LXJ9fTMw/IMG-20260429-221621-640.jpg",
+                "https://i.ibb.co/W4653wKj/IMG-20260429-221624-985.jpg",
+                "https://i.ibb.co/TMMvVCH7/IMG-20260429-221625-416.jpg",
+                "https://i.ibb.co/67x6gCMG/IMG-20260429-221624-036.jpg"
+            ],
+            giftLinks: [
+                "https://t.me/nft/LunarSnake-129408",
+                "https://t.me/nft/SwagBag-218341",
+                "https://t.me/nft/LunarSnake-26013",
+                "https://t.me/nft/PartySparkler-12413"
+            ]
+        }
+    ];
+            // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
     let currentGifts = [...originalGifts];
     let selectedBackgrounds = [];
     let currentBgFilter = null;
     let activeGift = null;
     let isPopupVisible = false;
+    let activeCollection = null; // текущая открытая коллекция
+    let currentView = 'gifts'; // 'gifts', 'collections', 'collectionView'
 
-    function renderGrid(data) {
+    // ========== ОТРИСОВКА ПОДАРКОВ ==========
+    function renderGifts(data) {
         const container = document.getElementById('nftGrid');
         if (!container) return;
         container.innerHTML = '';
         data.forEach(gift => {
             const card = document.createElement('div');
             card.className = 'gift-card';
-            card.setAttribute('data-gift-id', gift.id);
             
             const imgWrapper = document.createElement('div');
             imgWrapper.className = 'image-wrapper';
@@ -763,7 +836,7 @@
                 const rect = imgWrapper.getBoundingClientRect();
                 const x = rect.left + rect.width / 2;
                 const y = rect.bottom + 5;
-                showActionPopup(x, y, gift);
+                showActionPopup(x, y, { type: 'gift', data: gift });
             });
             priceWrapper.appendChild(tgBtn);
             card.appendChild(priceWrapper);
@@ -771,12 +844,104 @@
         });
     }
 
+    // ========== ОТРИСОВКА КОЛЛЕКЦИЙ ==========
+    function renderCollections() {
+        const container = document.getElementById('collectionsGrid');
+        if (!container) return;
+        container.innerHTML = '';
+        collections.forEach(collection => {
+            const card = document.createElement('div');
+            card.className = 'collection-card';
+            
+            const previewDiv = document.createElement('div');
+            previewDiv.className = 'collection-preview';
+            const gridDiv = document.createElement('div');
+            gridDiv.className = 'preview-grid';
+            const previewImages = collection.previewImages.slice(0, 6);
+            for (let i = 0; i < 6; i++) {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'preview-item';
+                if (i < previewImages.length) {
+                    const img = document.createElement('img');
+                    img.src = previewImages[i];
+                    img.alt = '';
+                    itemDiv.appendChild(img);
+                } else {
+                    itemDiv.style.background = '#1a1a1a';
+                }
+                gridDiv.appendChild(itemDiv);
+            }
+            previewDiv.appendChild(gridDiv);
+            card.appendChild(previewDiv);
+            
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'collection-name';
+            nameDiv.innerText = collection.name;
+            card.appendChild(nameDiv);
+            
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'collection-info';
+            const countSpan = document.createElement('span');
+            countSpan.className = 'collection-count';
+            countSpan.innerText = `${collection.count} подарков`;
+            const priceSpan = document.createElement('span');
+            priceSpan.className = 'collection-price';
+            priceSpan.innerText = collection.price;
+            const tgBtn = document.createElement('div');
+            tgBtn.className = 'tg-btn';
+            tgBtn.innerHTML = `<img src="https://static.vecteezy.com/system/resources/previews/049/694/893/large_2x/telegram-3d-illustration-free-png.png" alt="TG">`;
+            tgBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const rect = previewDiv.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.bottom + 5;
+                showActionPopup(x, y, { type: 'collection', data: collection });
+            });
+            infoDiv.appendChild(countSpan);
+            infoDiv.appendChild(priceSpan);
+            infoDiv.appendChild(tgBtn);
+            card.appendChild(infoDiv);
+            container.appendChild(card);
+        });
+    }
+
+    // ========== ОТРИСОВКА ОТКРЫТОЙ КОЛЛЕКЦИИ ==========
+    function renderOpenedCollection(collection) {
+        const container = document.getElementById('nftGrid');
+        container.innerHTML = '';
+        collection.giftLinks.forEach((link, idx) => {
+            const card = document.createElement('div');
+            card.className = 'gift-card';
+            const imgWrapper = document.createElement('div');
+            imgWrapper.className = 'image-wrapper';
+            const img = document.createElement('img');
+            img.className = 'gift-img';
+            // берём картинку из previewImages, если есть, иначе ставим заглушку
+            const imgUrl = idx < collection.previewImages.length ? collection.previewImages[idx] : '';
+            img.src = imgUrl;
+            img.alt = `Подарок ${idx+1}`;
+            imgWrapper.appendChild(img);
+            card.appendChild(imgWrapper);
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'gift-name';
+            nameDiv.innerText = `Подарок ${idx+1}`;
+            card.appendChild(nameDiv);
+            const priceWrapper = document.createElement('div');
+            priceWrapper.className = 'price-wrapper';
+            // в открытой коллекции кнопок Telegram нет (только просмотр)
+            card.appendChild(priceWrapper);
+            container.appendChild(card);
+        });
+    }
+
+    // ========== ПЛАШКА С ДЕЙСТВИЯМИ ==========
     const popup = document.getElementById('actionPopup');
     const actionMessageBtn = document.getElementById('actionMessageBtn');
     const actionViewBtn = document.getElementById('actionViewBtn');
+    let currentActionItem = null;
 
-    function showActionPopup(x, y, gift) {
-        activeGift = gift;
+    function showActionPopup(x, y, item) {
+        currentActionItem = item;
         popup.style.display = 'flex';
         popup.style.left = (x - 100) + 'px';
         popup.style.top = y + 'px';
@@ -798,26 +963,91 @@
         popup.classList.remove('show');
         popup.style.display = 'none';
         isPopupVisible = false;
-        activeGift = null;
+        currentActionItem = null;
         document.removeEventListener('click', closePopupOnOutside);
         document.removeEventListener('touchstart', closePopupOnOutside);
     }
 
     actionMessageBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (!activeGift) return;
-        const text = `Привет, хотел бы приобрести этот подарок ${activeGift.link}, ${activeGift.price}₽`;
-        window.open(`https://t.me/CAIIIOK_gomeon?text=${encodeURIComponent(text)}`, '_blank');
+        if (!currentActionItem) return;
+        if (currentActionItem.type === 'gift') {
+            const text = `Привет, хотел бы приобрести этот подарок ${currentActionItem.data.link}, ${currentActionItem.data.price}₽`;
+            window.open(`https://t.me/CAIIIOK_gomeon?text=${encodeURIComponent(text)}`, '_blank');
+        } else if (currentActionItem.type === 'collection') {
+            let message = `Привет, хотел бы приобрести коллекцию "${currentActionItem.data.name}" (${currentActionItem.data.count} подарков) за ${currentActionItem.data.price}₽. Состав коллекции:\n`;
+            currentActionItem.data.giftLinks.forEach((link, idx) => {
+                message += `${idx+1}. ${link}\n`;
+            });
+            window.open(`https://t.me/CAIIIOK_gomeon?text=${encodeURIComponent(message)}`, '_blank');
+        }
         hidePopup();
     });
 
     actionViewBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (!activeGift) return;
-        window.open(activeGift.link, '_blank');
+        if (!currentActionItem) return;
+        if (currentActionItem.type === 'gift') {
+            window.open(currentActionItem.data.link, '_blank');
+        } else if (currentActionItem.type === 'collection') {
+            // открываем коллекцию внутри сайта
+            openCollection(currentActionItem.data);
+        }
         hidePopup();
     });
 
+    // ========== ОТКРЫТИЕ/ЗАКРЫТИЕ КОЛЛЕКЦИИ ==========
+    function openCollection(collection) {
+        activeCollection = collection;
+        currentView = 'collectionView';
+        document.getElementById('nftGrid').style.display = 'grid';
+        document.getElementById('collectionsGrid').style.display = 'none';
+        document.getElementById('backBtn').style.display = 'flex';
+        renderOpenedCollection(collection);
+    }
+
+    function closeCollection() {
+        activeCollection = null;
+        currentView = 'collections';
+        document.getElementById('nftGrid').style.display = 'none';
+        document.getElementById('collectionsGrid').style.display = 'grid';
+        document.getElementById('backBtn').style.display = 'none';
+        renderCollections();
+    }
+
+    // ========== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ==========
+    function switchToGifts() {
+        currentView = 'gifts';
+        document.getElementById('nftGrid').style.display = 'grid';
+        document.getElementById('collectionsGrid').style.display = 'none';
+        document.getElementById('backBtn').style.display = 'none';
+        document.getElementById('tabGifts').classList.add('active');
+        document.getElementById('tabCollections').classList.remove('active');
+        renderGifts(currentGifts);
+    }
+
+    function switchToCollections() {
+        currentView = 'collections';
+        document.getElementById('nftGrid').style.display = 'none';
+        document.getElementById('collectionsGrid').style.display = 'grid';
+        document.getElementById('backBtn').style.display = 'none';
+        document.getElementById('tabCollections').classList.add('active');
+        document.getElementById('tabGifts').classList.remove('active');
+        renderCollections();
+    }
+
+    document.getElementById('tabGifts').addEventListener('click', () => switchToGifts());
+    document.getElementById('tabCollections').addEventListener('click', () => switchToCollections());
+    document.getElementById('backBtn').addEventListener('click', () => closeCollection());
+
+    // Закрытие коллекции по клику на фон вне карточек
+    document.body.addEventListener('click', (e) => {
+        if (currentView === 'collectionView' && !e.target.closest('.gift-card') && !e.target.closest('.back-btn') && !e.target.closest('.fab') && !e.target.closest('.info-btn') && !e.target.closest('.sort-menu')) {
+            closeCollection();
+        }
+    });
+
+    // ========== МЕНЮ, ФИЛЬТРЫ, СОРТИРОВКА (как раньше, только для подарков) ==========
     const tasksModal = document.getElementById('tasksModal');
     const infoBtn = document.getElementById('infoBtn');
     const closeTasksBtn = document.getElementById('closeTasksBtn');
@@ -830,7 +1060,7 @@
     function applyBackgroundFilter() {
         if (!currentBgFilter || currentBgFilter.length === 0) currentGifts = [...originalGifts];
         else currentGifts = originalGifts.filter(gift => currentBgFilter.includes(gift.bg));
-        renderGrid(currentGifts);
+        if (currentView === 'gifts') renderGifts(currentGifts);
     }
 
     const modal = document.getElementById('bgModal');
@@ -906,10 +1136,10 @@
     showResultsBtn.addEventListener('click', () => { currentBgFilter = [...selectedBackgrounds]; applyBackgroundFilter(); modal.classList.remove('show'); });
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
 
-    function sortByPriceAsc() { currentGifts.sort((a, b) => a.price - b.price); renderGrid(currentGifts); }
-    function sortByPriceDesc() { currentGifts.sort((a, b) => b.price - a.price); renderGrid(currentGifts); }
-    function filterByPrice(minPrice, maxPrice) { currentGifts = originalGifts.filter(g => g.price >= minPrice && g.price <= maxPrice); renderGrid(currentGifts); }
-    function resetOrder() { currentGifts = [...originalGifts]; currentBgFilter = null; selectedBackgrounds = []; renderGrid(currentGifts); document.getElementById('minPrice').value = ''; document.getElementById('maxPrice').value = ''; const applyBtn = document.getElementById('applyFilterBtn'); applyBtn.classList.remove('active'); }
+    function sortByPriceAsc() { currentGifts.sort((a, b) => a.price - b.price); if (currentView === 'gifts') renderGifts(currentGifts); }
+    function sortByPriceDesc() { currentGifts.sort((a, b) => b.price - a.price); if (currentView === 'gifts') renderGifts(currentGifts); }
+    function filterByPrice(minPrice, maxPrice) { currentGifts = originalGifts.filter(g => g.price >= minPrice && g.price <= maxPrice); if (currentView === 'gifts') renderGifts(currentGifts); }
+    function resetOrder() { currentGifts = [...originalGifts]; currentBgFilter = null; selectedBackgrounds = []; if (currentView === 'gifts') renderGifts(currentGifts); document.getElementById('minPrice').value = ''; document.getElementById('maxPrice').value = ''; const applyBtn = document.getElementById('applyFilterBtn'); applyBtn.classList.remove('active'); }
     function checkApplyButtonState() { const minVal = document.getElementById('minPrice').value; const maxVal = document.getElementById('maxPrice').value; const applyBtn = document.getElementById('applyFilterBtn'); if (minVal !== '' && maxVal !== '') applyBtn.classList.add('active'); else applyBtn.classList.remove('active'); }
     function applyFilter() { const minVal = document.getElementById('minPrice').value; const maxVal = document.getElementById('maxPrice').value; if (minVal === '' || maxVal === '') return; const min = Number(minVal); const max = Number(maxVal); if (isNaN(min) || isNaN(max) || min > max) return; filterByPrice(min, max); menu.classList.remove('show'); }
 
@@ -928,7 +1158,9 @@
     const applyBtn = document.getElementById('applyFilterBtn');
     applyBtn.addEventListener('click', applyFilter);
     
-    renderGrid(currentGifts);
+    // ========== СТАРТ ==========
+    switchToGifts();
 </script>
 </body>
 </html>
+    
