@@ -709,7 +709,7 @@
     </div>
 </div>
     <script>
-    // ========== ФОНЫ (как раньше) ==========
+    // ========== ФОНЫ ==========
     const backgroundsList = [
         "Rifle Green", "Roman Silver", "Rosewood", "Sapphire", "Satin Gold", "Seal Brown", "Shamrock Green", "Silver Blue", "Sky Blue", "Steel Grey", "Strawberry", "Tactical Pine", "Tomato", "Turquoise", "Neon Blue", "Old Gold", "Onyx Black", "Orange", "Pacific Cyan", "Pacific Green", "Persimmon", "Pine Green", "Pistachio", "Platinum", "Pure Gold", "Purple", "Ranger Green", "Raspberry", "Jade Green", "Khaki Green", "Lavender", "Lemongrass", "Light Olive", "Malachite", "Marine Blue", "Mexican Pink", "Midnight Blue", "Mint Green", "Moonstone", "Mustard", "Mystic Pearl", "Navy Blue", "Electric Purple", "Emerald", "English Violet", "Fandango", "Feldgrau", "Fire Engine", "French Blue", "French Violet", "Grape", "Gunmetal", "Gunship Green", "Hunter Green", "Indigo Dye", "Ivory White", "Carmine", "Carrot Juice", "Celtic Blue", "Chestnut", "Chocolate", "Cobalt Blue", "Copper", "Coral Red", "Cyberpunk", "Dark Green", "Dark Lilac", "Deep Cyan", "Desert Sand", "Electric Indigo", "Black", "Amber", "Aquamarine", "Azure Blue", "Battleship Grey", "Burgundy", "Burnt Sienna", "Camo Green", "Cappuccino", "Caramel"
     ];
@@ -743,9 +743,6 @@
     ];
 
     // ========== КОЛЛЕКЦИИ ==========
-    // КАК ДОБАВЛЯТЬ НОВУЮ КОЛЛЕКЦИЮ:
-    // 1. Скопируй блок { ... }, вставь в массив collections
-    // 2. Заполни: id (уникальный), name, price (за всю коллекцию), count (сколько подарков), previewImages (массив из 2-6 ссылок на картинки), giftLinks (массив ссылок на подарки t.me/nft/...)
     const collections = [
         {
             id: 1,
@@ -789,16 +786,14 @@
             ]
         }
     ];
-            // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
-    let currentGifts = [...originalGifts];
+            let currentGifts = [...originalGifts];
     let selectedBackgrounds = [];
     let currentBgFilter = null;
     let activeGift = null;
     let isPopupVisible = false;
-    let activeCollection = null; // текущая открытая коллекция
-    let currentView = 'gifts'; // 'gifts', 'collections', 'collectionView'
+    let activeCollection = null;
+    let currentView = 'gifts';
 
-    // ========== ОТРИСОВКА ПОДАРКОВ ==========
     function renderGifts(data) {
         const container = document.getElementById('nftGrid');
         if (!container) return;
@@ -806,7 +801,6 @@
         data.forEach(gift => {
             const card = document.createElement('div');
             card.className = 'gift-card';
-            
             const imgWrapper = document.createElement('div');
             imgWrapper.className = 'image-wrapper';
             const img = document.createElement('img');
@@ -815,19 +809,16 @@
             img.alt = gift.name;
             imgWrapper.appendChild(img);
             card.appendChild(imgWrapper);
-            
             const nameDiv = document.createElement('div');
             nameDiv.className = 'gift-name';
             nameDiv.innerText = gift.name;
             card.appendChild(nameDiv);
-            
             const priceWrapper = document.createElement('div');
             priceWrapper.className = 'price-wrapper';
             const priceDiv = document.createElement('div');
             priceDiv.className = 'gift-price';
             priceDiv.innerText = gift.price;
             priceWrapper.appendChild(priceDiv);
-            
             const tgBtn = document.createElement('div');
             tgBtn.className = 'tg-btn';
             tgBtn.innerHTML = `<img src="https://static.vecteezy.com/system/resources/previews/049/694/893/large_2x/telegram-3d-illustration-free-png.png" alt="TG">`;
@@ -844,7 +835,6 @@
         });
     }
 
-    // ========== ОТРИСОВКА КОЛЛЕКЦИЙ ==========
     function renderCollections() {
         const container = document.getElementById('collectionsGrid');
         if (!container) return;
@@ -852,7 +842,6 @@
         collections.forEach(collection => {
             const card = document.createElement('div');
             card.className = 'collection-card';
-            
             const previewDiv = document.createElement('div');
             previewDiv.className = 'collection-preview';
             const gridDiv = document.createElement('div');
@@ -873,12 +862,10 @@
             }
             previewDiv.appendChild(gridDiv);
             card.appendChild(previewDiv);
-            
             const nameDiv = document.createElement('div');
             nameDiv.className = 'collection-name';
             nameDiv.innerText = collection.name;
             card.appendChild(nameDiv);
-            
             const infoDiv = document.createElement('div');
             infoDiv.className = 'collection-info';
             const countSpan = document.createElement('span');
@@ -905,7 +892,6 @@
         });
     }
 
-    // ========== ОТРИСОВКА ОТКРЫТОЙ КОЛЛЕКЦИИ ==========
     function renderOpenedCollection(collection) {
         const container = document.getElementById('nftGrid');
         container.innerHTML = '';
@@ -916,7 +902,6 @@
             imgWrapper.className = 'image-wrapper';
             const img = document.createElement('img');
             img.className = 'gift-img';
-            // берём картинку из previewImages, если есть, иначе ставим заглушку
             const imgUrl = idx < collection.previewImages.length ? collection.previewImages[idx] : '';
             img.src = imgUrl;
             img.alt = `Подарок ${idx+1}`;
@@ -928,13 +913,11 @@
             card.appendChild(nameDiv);
             const priceWrapper = document.createElement('div');
             priceWrapper.className = 'price-wrapper';
-            // в открытой коллекции кнопок Telegram нет (только просмотр)
             card.appendChild(priceWrapper);
             container.appendChild(card);
         });
     }
 
-    // ========== ПЛАШКА С ДЕЙСТВИЯМИ ==========
     const popup = document.getElementById('actionPopup');
     const actionMessageBtn = document.getElementById('actionMessageBtn');
     const actionViewBtn = document.getElementById('actionViewBtn');
@@ -947,7 +930,6 @@
         popup.style.top = y + 'px';
         popup.classList.add('show');
         isPopupVisible = true;
-        
         setTimeout(() => {
             document.addEventListener('click', closePopupOnOutside);
             document.addEventListener('touchstart', closePopupOnOutside);
@@ -990,13 +972,11 @@
         if (currentActionItem.type === 'gift') {
             window.open(currentActionItem.data.link, '_blank');
         } else if (currentActionItem.type === 'collection') {
-            // открываем коллекцию внутри сайта
             openCollection(currentActionItem.data);
         }
         hidePopup();
     });
 
-    // ========== ОТКРЫТИЕ/ЗАКРЫТИЕ КОЛЛЕКЦИИ ==========
     function openCollection(collection) {
         activeCollection = collection;
         currentView = 'collectionView';
@@ -1015,7 +995,6 @@
         renderCollections();
     }
 
-    // ========== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ==========
     function switchToGifts() {
         currentView = 'gifts';
         document.getElementById('nftGrid').style.display = 'grid';
@@ -1040,14 +1019,12 @@
     document.getElementById('tabCollections').addEventListener('click', () => switchToCollections());
     document.getElementById('backBtn').addEventListener('click', () => closeCollection());
 
-    // Закрытие коллекции по клику на фон вне карточек
     document.body.addEventListener('click', (e) => {
         if (currentView === 'collectionView' && !e.target.closest('.gift-card') && !e.target.closest('.back-btn') && !e.target.closest('.fab') && !e.target.closest('.info-btn') && !e.target.closest('.sort-menu')) {
             closeCollection();
         }
     });
 
-    // ========== МЕНЮ, ФИЛЬТРЫ, СОРТИРОВКА (как раньше, только для подарков) ==========
     const tasksModal = document.getElementById('tasksModal');
     const infoBtn = document.getElementById('infoBtn');
     const closeTasksBtn = document.getElementById('closeTasksBtn');
@@ -1158,9 +1135,8 @@
     const applyBtn = document.getElementById('applyFilterBtn');
     applyBtn.addEventListener('click', applyFilter);
     
-    // ========== СТАРТ ==========
     switchToGifts();
 </script>
 </body>
 </html>
-    
+        
