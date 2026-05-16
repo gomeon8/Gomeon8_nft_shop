@@ -770,43 +770,21 @@
     const collections = [
         {
             id: 1,
-            name: "Новогодний набор",
-            price: 5000,
-            count: 7,
+            name: "Money Flow",
+            price: 1575,
+            count: 3,
             previewImages: [
-                "https://i.ibb.co/ZpQJQ1HZ/IMG-20260427-235518-214.jpg",
-                "https://i.ibb.co/h1YNmH8k/IMG-20260425-183559-003.jpg",
-                "https://i.ibb.co/Vpw6Cd7x/IMG-20260425-171429-926.jpg",
-                "https://i.ibb.co/fGChLYDq/IMG-20260425-184633-206.jpg",
-                "https://i.ibb.co/SDcM2FmR/IMG-20260425-185100-731.jpg",
-                "https://i.ibb.co/xSGNT2CG/IMG-20260425-185541-193.jpg"
+                "https://i.ibb.co/Y4xHwHj6/IMG-20260516-110530-781.jpg",
+                "",
+                "https://i.ibb.co/Tx53mhRk/IMG-20260516-110531-752.jpg"
+                
+                
             ],
             giftLinks: [
-                "https://t.me/nft/MoodPack-7495",
-                "https://t.me/nft/JingleBells-28899",
-                "https://t.me/nft/ChillFlame-197348",
-                "https://t.me/nft/DeskCalendar-233899",
-                "https://t.me/nft/VictoryMedal-12550",
-                "https://t.me/nft/RestlessJar-43217",
-                "https://t.me/nft/MoodPack-152015"
-            ]
-        },
-        {
-            id: 2,
-            name: "Зимняя сказка",
-            price: 3500,
-            count: 4,
-            previewImages: [
-                "https://i.ibb.co/LXJ9fTMw/IMG-20260429-221621-640.jpg",
-                "https://i.ibb.co/W4653wKj/IMG-20260429-221624-985.jpg",
-                "https://i.ibb.co/TMMvVCH7/IMG-20260429-221625-416.jpg",
-                "https://i.ibb.co/67x6gCMG/IMG-20260429-221624-036.jpg"
-            ],
-            giftLinks: [
-                "https://t.me/nft/LunarSnake-129408",
-                "https://t.me/nft/SwagBag-218341",
-                "https://t.me/nft/LunarSnake-26013",
-                "https://t.me/nft/PartySparkler-12413"
+                "t.me/nft/WhipCupcake-208820",
+                "",
+                "t.me/nft/WhipCupcake-16328"
+                
             ]
         }
     ];
@@ -870,8 +848,9 @@
             previewDiv.className = 'collection-preview';
             const gridDiv = document.createElement('div');
             gridDiv.className = 'preview-grid';
-            const previewImages = collection.previewImages.slice(0, 6);
-            for (let i = 0; i < 6; i++) {
+            // ПОКАЗЫВАЕМ ТОЛЬКО 3 ПОДАРКА (1 РЯД, 3 КОЛОНКИ)
+            const previewImages = collection.previewImages.slice(0, 3);
+            for (let i = 0; i < 3; i++) {
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'preview-item';
                 if (i < previewImages.length) {
@@ -1163,3 +1142,4 @@
 </script>
 </body>
 </html>
+                                                        
