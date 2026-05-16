@@ -335,6 +335,25 @@
             font-size: 18px;
             color: white;
         }
+        .info-btn-tab {
+            width: 32px;
+            height: 32px;
+            background-color: rgba(255,255,255,0.15);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-weight: bold;
+            font-size: 18px;
+            color: white;
+            margin: auto 12px auto auto;
+        }
+        .info-btn-tab:active {
+            background-color: rgba(255,255,255,0.3);
+        }
         .info-btn:active {
             background-color: rgba(0,0,0,0.6);
         }
@@ -635,6 +654,7 @@
 <div class="tabs-bar">
     <button class="tab active" id="tabGifts">Подарки</button>
     <button class="tab" id="tabCollections">Коллекции</button>
+    <div class="info-btn-tab" id="infoBtnTab">i</div>
 </div>
 
 <div class="grid" id="nftGrid"></div>
@@ -644,8 +664,6 @@
 <div class="fab" id="sortFab">
     <div><span></span><span></span><span></span></div>
 </div>
-
-<div class="info-btn" id="infoBtn">i</div>
 
 <div class="sort-menu" id="sortMenu">
     <button id="openBgFilterBtn"> Выбрать фон</button>
@@ -1029,7 +1047,7 @@
     });
 
     const tasksModal = document.getElementById('tasksModal');
-    const infoBtn = document.getElementById('infoBtn');
+    const infoBtn = document.getElementById('infoBtnTab');
     const closeTasksBtn = document.getElementById('closeTasksBtn');
     function openTasksModal() { tasksModal.classList.add('show'); }
     function closeTasksModal() { tasksModal.classList.remove('show'); }
